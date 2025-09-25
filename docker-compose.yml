@@ -23,7 +23,7 @@ services:
       MYSQL_USER: pix_withdraw_service
       MYSQL_PASSWORD: password
     ports:
-      - "3306:3306"
+      - "33061:3306"
     volumes:
       - db_data:/var/lib/mysql
 
