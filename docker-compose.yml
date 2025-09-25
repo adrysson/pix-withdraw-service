@@ -5,6 +5,7 @@ services:
     image: hyperf-skeleton
     build:
       context: .
+    entrypoint: ["php", "bin/hyperf.php", "server:watch"]
     volumes:
       - ./:/opt/www
     ports:
