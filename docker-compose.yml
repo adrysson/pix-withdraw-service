@@ -1,10 +1,10 @@
-version: '3'
 services:
-  hyperf-skeleton:
+  app:
     container_name: hyperf-skeleton
     image: hyperf-skeleton
     build:
       context: .
+    entrypoint: ["php", "bin/hyperf.php", "server:watch"]
     volumes:
       - ./:/opt/www
     ports:
@@ -12,7 +12,24 @@ services:
     environment:
       - APP_ENV=dev
       - SCAN_CACHEABLE=false
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pix_withdraw_service
+      MYSQL_USER: pix_withdraw_service
+      MYSQL_PASSWORD: password
+    ports:
+      - "33061:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
 networks:
   default:
     name: hyperf-skeleton
+
+volumes:
+  db_data:
