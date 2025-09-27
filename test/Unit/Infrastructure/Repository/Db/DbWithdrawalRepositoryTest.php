@@ -120,6 +120,7 @@ class DbWithdrawalRepositoryTest extends TestCase
 
         $pixRow = (object) [
             'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+            'account_withdraw_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
             'type' => 'email',
             'key' => 'user@example.com',
             'created_at' => $past,

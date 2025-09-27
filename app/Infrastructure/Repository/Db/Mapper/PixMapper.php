@@ -7,6 +7,7 @@ use App\Domain\Enum\PixKeyType;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
 use App\Domain\ValueObject\Pix\PixKey;
+use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use DateTime;
 
 class PixMapper
@@ -15,6 +16,7 @@ class PixMapper
     {
         return new Pix(
             id: new PixId($data->id),
+            withdrawalId: new WithdrawalId($data->account_withdraw_id),
             key: self::mapPixKey($data),
             createdAt: new DateTime($data->created_at),
             updatedAt: new DateTime($data->updated_at)

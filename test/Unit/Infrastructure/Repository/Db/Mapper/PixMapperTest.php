@@ -5,7 +5,6 @@ namespace Test\Unit\Infrastructure\Repository\Db\Mapper;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
 use App\Domain\Enum\PixKeyType;
 use App\Domain\ValueObject\Pix\EmailPixKey;
-use App\Domain\ValueObject\Pix\PixId;
 use PHPUnit\Framework\TestCase;
 
 class PixMapperTest extends TestCase
@@ -14,6 +13,7 @@ class PixMapperTest extends TestCase
     {
         $data = (object) [
             'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+            'account_withdraw_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
             'type' => PixKeyType::EMAIL->value,
             'key' => 'user@example.com',
             'created_at' => '2023-01-01 10:00:00',
@@ -22,8 +22,8 @@ class PixMapperTest extends TestCase
 
         $pix = PixMapper::mapPix($data);
 
-        $this->assertInstanceOf(\App\Domain\Entity\Pix::class, $pix);
-        $this->assertEquals(new PixId('c1d2e3f4-5678-1234-9abc-def012345678'), $pix->id);
+        $this->assertEquals('c1d2e3f4-5678-1234-9abc-def012345678', $pix->id->value);
+        $this->assertEquals('c1d2e3f4-5678-1234-9abc-def012345678', $pix->withdrawalId->value);
         $this->assertInstanceOf(EmailPixKey::class, $pix->key);
         $this->assertEquals('user@example.com', $pix->key->value);
         $this->assertEquals('2023-01-01 10:00:00', $pix->createdAt->format('Y-m-d H:i:s'));
