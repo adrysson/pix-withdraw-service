@@ -66,16 +66,16 @@ class DbAccountRepository implements AccountRepository
         }
     }
 
-    public function withdraw(AccountId $accountId, Withdrawal $withdrawal): void
+    public function withdraw(Withdrawal $withdrawal): void
     {
         $this->database->beginTransaction();
         try {
-            $account = $this->findAccountByIdLock($accountId);
+            $account = $this->findAccountByIdLock($withdrawal->accountId);
 
             $account->withdraw($withdrawal);
 
             $this->database->table(self::ACCOUNT_TABLE)
-                ->where('id', $accountId->value)
+                ->where('id', $withdrawal->accountId->value)
                 ->update([
                     'balance' => $account->balance(),
                     'updated_at' => $account->updatedAt()->format('Y-m-d H:i:s'),

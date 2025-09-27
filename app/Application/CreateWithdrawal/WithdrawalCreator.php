@@ -32,6 +32,6 @@ class WithdrawalCreator
 
         $this->accountRepository->createWithdrawal($withdrawal);
 
-        $this->withdrawer->execute($accountId, $withdrawal);
+        $this->withdrawer->execute($withdrawal);
     }
 }

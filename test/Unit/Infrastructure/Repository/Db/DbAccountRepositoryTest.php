@@ -3,7 +3,6 @@
 namespace Test\Unit\Infrastructure\Repository\Db;
 
 use App\Infrastructure\Repository\Db\DbAccountRepository;
-use App\Domain\Exception\AccountNotFoundException;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
@@ -79,7 +78,7 @@ class DbAccountRepositoryTest extends TestCase
 
         $repo = new DbAccountRepository($database);
 
-        $repo->withdraw($accountId, $withdrawal);
+        $repo->withdraw($withdrawal);
 
         $this->assertTrue($withdrawal->done());
     }

@@ -39,10 +39,10 @@ class WithdrawerTest extends TestCase
         $repository = Mockery::mock(AccountRepository::class);
         $repository->shouldReceive('withdraw')
             ->once()
-            ->with($accountId, $withdrawal);
+            ->with($withdrawal);
 
         $withdrawer = new Withdrawer($repository);
-        $withdrawer->execute($accountId, $withdrawal);
+        $withdrawer->execute($withdrawal);
         $this->assertTrue(true);
     }
 
@@ -70,7 +70,7 @@ class WithdrawerTest extends TestCase
             ->with($withdrawal, $exception);
 
         $withdrawer = new Withdrawer($repository);
-        $withdrawer->execute($accountId, $withdrawal);
+        $withdrawer->execute($withdrawal);
         $this->assertTrue(true);
     }
 }
