@@ -5,16 +5,18 @@ namespace App\Domain\Entity;
 use App\Domain\Entity;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
+use App\Domain\ValueObject\Account\AccountId;
 use DateTime;
 
 class Withdrawal extends Entity
 {
     public function __construct(
         WithdrawalId $id,
-        public readonly Account $account,
+        public readonly AccountId $accountId,
         public readonly WithdrawalMethod $method,
         public readonly float $amount,
         public readonly ?WithdrawalSchedule $schedule,
+        private bool $done,
         DateTime $createdAt,
         DateTime $updatedAt,
     ) {
@@ -25,35 +27,33 @@ class Withdrawal extends Entity
         );
     }
 
+    public function done(): bool
+    {
+        return $this->done;
+    }
+
+    public function markAsDone(): void
+    {
+        $this->done = true;
+
+        $this->update();
+    }
+
     public static function create(
-        Account $account,
+        AccountId $accountId,
         WithdrawalMethod $method,
         float $amount,
         ?WithdrawalSchedule $schedule, 
     ): self {
-
-        self::validate($schedule);
-
         return new self(
             id: WithdrawalId::generate(),
-            account: $account,
+            accountId: $accountId,
             method: $method,
             amount: $amount,
             schedule: $schedule,
+            done: false,
             createdAt: new DateTime(),
             updatedAt: new DateTime(),
         );
-    }
-
-    public function withdraw(): void
-    {
-        if (! $this->schedule?->isFuture()) {
-            $this->account->subtractBalance($this->amount);
-        }
-    }
-
-    private static function validate(?WithdrawalSchedule $schedule): void
-    {
-        $schedule?->validateForCreation();
     }
 }

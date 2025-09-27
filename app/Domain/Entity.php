@@ -18,4 +18,9 @@ abstract class Entity
     {
         return $this->updatedAt;
     }
+
+    public function update(): void
+    {
+        $this->updatedAt = new DateTime();
+    }
 }
