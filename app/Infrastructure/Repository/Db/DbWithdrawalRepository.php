@@ -53,7 +53,6 @@ class DbWithdrawalRepository implements WithdrawalRepository
                 $this->pixRepository->insert(
                     database: $this->database,
                     pix: $method,
-                    withdrawalId: $withdrawal->id,
                 );
             }
 

@@ -22,12 +22,12 @@ class DbPixRepository
         return PixMapper::mapPix($row);
     }
 
-    public function insert(Db $database, Pix $pix, WithdrawalId $withdrawalId): void
+    public function insert(Db $database, Pix $pix): void
     {
         $database->table(self::PIX_TABLE)
             ->insert([
                 'id' => $pix->id->value,
-                'account_withdraw_id' => $withdrawalId->value,
+                'account_withdraw_id' => $pix->withdrawalId->value,
                 'type' => $pix->key->keyType()->value,
                 'key' => $pix->key->value,
                 'created_at' => $pix->createdAt->format('Y-m-d H:i:s'),
