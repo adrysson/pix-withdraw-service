@@ -45,7 +45,7 @@ class FinishPendingWithdrawalsTest extends TestCase
 
         $withdrawalRepository = $this->createMock(WithdrawalRepository::class);
         $withdrawalRepository->expects($this->once())
-            ->method('findPendingWithdrawals')
+            ->method('findPending')
             ->willReturn($collection);
 
 

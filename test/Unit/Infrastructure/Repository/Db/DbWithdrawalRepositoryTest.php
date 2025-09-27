@@ -169,7 +169,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $database->shouldReceive('first')->andReturn($pixRow);
 
         $repo = new DbWithdrawalRepository($database);
-        $result = $repo->findPendingWithdrawals();
+        $result = $repo->findPending();
 
         $this->assertInstanceOf(WithdrawalCollection::class, $result);
         $this->assertCount(1, $result->all());

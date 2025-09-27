@@ -109,7 +109,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
             ]);
     }
 
-    public function findPendingWithdrawals(): WithdrawalCollection
+    public function findPending(): WithdrawalCollection
     {
         $now = (new DateTime())->format('Y-m-d H:i:s');
 

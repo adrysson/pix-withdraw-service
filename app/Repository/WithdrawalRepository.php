@@ -14,5 +14,5 @@ interface WithdrawalRepository
 
     public function finish(Withdrawal $withdrawal, ?Throwable $throwable = null): void;
 
-    public function findPendingWithdrawals(): WithdrawalCollection;
+    public function findPending(): WithdrawalCollection;
 }

@@ -15,7 +15,7 @@ class FinishPendingWithdrawals
 
     public function execute(): void
     {
-        $pendingWithdrawals = $this->withdrawalRepository->findPendingWithdrawals();
+        $pendingWithdrawals = $this->withdrawalRepository->findPending();
 
         foreach ($pendingWithdrawals as $withdrawal) {
             $this->withdrawer->execute($withdrawal);
