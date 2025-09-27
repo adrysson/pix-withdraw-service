@@ -31,6 +31,9 @@ class Withdrawal extends Entity
         float $amount,
         ?WithdrawalSchedule $schedule, 
     ): self {
+
+        self::validate($schedule);
+
         return new self(
             id: EntityId::generate(),
             account: $account,
@@ -47,5 +50,10 @@ class Withdrawal extends Entity
         if (! $this->schedule?->isFuture()) {
             $this->account->subtractBalance($this->amount);
         }
+    }
+
+    private static function validate(?WithdrawalSchedule $schedule): void
+    {
+        $schedule?->validateForCreation();
     }
 }

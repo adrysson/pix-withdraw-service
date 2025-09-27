@@ -22,4 +22,10 @@ abstract class DateValueObject extends ValueObject
     {
         return $this->value > new DateTime();
     }
+
+    public function isGreaterThanDaysInFuture(int $days): bool
+    {
+        $max = (new DateTime())->modify("+{$days} days");
+        return $this->value > $max;
+    }
 }
