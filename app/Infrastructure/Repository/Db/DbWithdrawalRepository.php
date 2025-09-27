@@ -86,7 +86,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
                     'updated_at' => $account->updatedAt()->format('Y-m-d H:i:s'),
                 ]);
 
-            $this->finishWithdrawal($withdrawal);
+            $this->finish($withdrawal);
 
             $this->database->commit();
         } catch (Throwable $throwable) {
@@ -95,7 +95,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
         }
     }
 
-    public function finishWithdrawal(Withdrawal $withdrawal, ?Throwable $throwable = null): void
+    public function finish(Withdrawal $withdrawal, ?Throwable $throwable = null): void
     {
         $withdrawal->markAsDone();
 

@@ -103,7 +103,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $database->shouldReceive('update')->once();
 
         $repo = new DbWithdrawalRepository($database);
-        $repo->finishWithdrawal($withdrawal, null);
+        $repo->finish($withdrawal, null);
         $this->assertTrue($withdrawal->done());
     }
 

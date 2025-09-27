@@ -18,7 +18,7 @@ class Withdrawer
         try {
             $this->withdrawalRepository->withdraw($withdrawal);
         } catch (Throwable $throwable) {
-            $this->withdrawalRepository->finishWithdrawal($withdrawal, $throwable);
+            $this->withdrawalRepository->finish($withdrawal, $throwable);
         }
     }
 }

@@ -65,7 +65,7 @@ class WithdrawerTest extends TestCase
         $repository = Mockery::mock(WithdrawalRepository::class);
         $repository->shouldReceive('withdraw')
             ->andThrow($exception);
-        $repository->shouldReceive('finishWithdrawal')
+        $repository->shouldReceive('finish')
             ->once()
             ->with($withdrawal, $exception);
 
