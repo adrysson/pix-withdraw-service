@@ -5,8 +5,8 @@ namespace App\Infrastructure\Repository\Db;
 use App\Domain\Entity\Account;
 use App\Domain\Exception\AccountNotFoundException;
 use App\Domain\ValueObject\Account\AccountId;
+use App\Infrastructure\Repository\Db\Mapper\AccountMapper;
 use Hyperf\DbConnection\Db;
-use DateTime;
 
 class DbAccountRepository
 {
@@ -21,22 +21,18 @@ class DbAccountRepository
     {
         $query = $this->database->table(self::ACCOUNT_TABLE)
             ->where('id', $id->value);
+
         if ($lockForUpdate) {
             $query = $query->lockForUpdate();
         }
+
         $data = $query->first();
 
         if (! $data) {
             throw new AccountNotFoundException($id->value);
         }
 
-        return new Account(
-            id: new AccountId($data->id),
-            name: $data->name,
-            balance: (float) $data->balance,
-            createdAt: new DateTime($data->created_at),
-            updatedAt: new DateTime($data->updated_at),
-        );
+        return AccountMapper::mapAccount($data);
     }
 
     public function update(Account $account): void
