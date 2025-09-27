@@ -4,6 +4,7 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity;
 use App\Domain\ValueObject\EntityId;
+use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
 use DateTime;
 
 class Withdrawal extends Entity
@@ -12,7 +13,7 @@ class Withdrawal extends Entity
         EntityId $id,
         public readonly WithdrawalMethod $method,
         public readonly float $amount,
-        public readonly ?DateTime $schedule,
+        public readonly ?WithdrawalSchedule $schedule,
         DateTime $createdAt,
         DateTime $updatedAt,
     ) {

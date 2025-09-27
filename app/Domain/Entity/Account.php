@@ -31,8 +31,9 @@ class Account extends Entity
 
     public function withdraw(Withdrawal $withdrawal): void
     {
-        $this->balance -= $withdrawal->amount;
-
+        if (! $withdrawal->schedule?->isFuture()) {
+            $this->balance -= $withdrawal->amount;
+        }
         $this->withdrawals->add($withdrawal);
     }
 }
