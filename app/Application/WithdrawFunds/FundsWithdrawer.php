@@ -2,8 +2,8 @@
 
 namespace App\Application\WithdrawFunds;
 
-use App\Domain\Entity\Account;
 use App\Domain\Entity\Withdrawal;
+use App\Domain\ValueObject\EntityId;
 use App\Repository\AccountRepository;
 
 class FundsWithdrawer
@@ -13,8 +13,10 @@ class FundsWithdrawer
     ) {
     }
 
-    public function withdraw(Account $account, Withdrawal $withdrawal): void
+    public function withdraw(EntityId $accountId, Withdrawal $withdrawal): void
     {
+        $account = $this->accountRepository->findById($accountId);
+
         $account->withdraw($withdrawal);
 
         $this->accountRepository->update($account);

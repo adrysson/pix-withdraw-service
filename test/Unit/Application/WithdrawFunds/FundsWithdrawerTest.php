@@ -45,11 +45,13 @@ class FundsWithdrawerTest extends TestCase
         );
 
         $repository = $this->createMock(AccountRepository::class);
+        $repository->expects($this->once())->method('findById')
+            ->willReturn($account);
         $repository->expects($this->once())->method('update');
 
         $service = new FundsWithdrawer($repository);
 
-        $service->withdraw($account, $withdrawal);
+        $service->withdraw($account->id, $withdrawal);
 
         $this->assertEquals(60.0, $account->balance());
         $this->assertCount(1, $account->withdrawals->toArray());
