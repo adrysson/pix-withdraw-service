@@ -3,14 +3,12 @@
 namespace App\Infrastructure\Repository\Db;
 
 use App\Domain\Collection\WithdrawalCollection;
-use App\Domain\Entity\Account;
+use App\Infrastructure\Repository\Db\DbAccountRepository;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\Enum\WithdrawalMethodType;
 use App\Repository\WithdrawalRepository;
-use App\Domain\Exception\AccountNotFoundException;
-use App\Domain\ValueObject\Account\AccountId;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
 use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
 use Hyperf\DbConnection\Db;
@@ -19,15 +17,17 @@ use Throwable;
 
 class DbWithdrawalRepository implements WithdrawalRepository
 {
-    private const ACCOUNT_TABLE = 'account';
-
     private const WITHDRAWAL_TABLE = 'account_withdraw';
 
     private const PIX_TABLE = 'account_withdraw_pix';
 
+    private DbAccountRepository $accountRepository;
+
     public function __construct(
         private Db $database,
-    ) {  
+        ?DbAccountRepository $accountRepository = null,
+    ) {
+        $this->accountRepository = $accountRepository ?: new DbAccountRepository($this->database);
     }
 
     public function create(Withdrawal $withdrawal): void
@@ -75,16 +75,12 @@ class DbWithdrawalRepository implements WithdrawalRepository
     {
         $this->database->beginTransaction();
         try {
-            $account = $this->findAccountByIdLock($withdrawal->accountId);
+
+            $account = $this->accountRepository->findByIdLock($withdrawal->accountId);
 
             $account->withdraw($withdrawal);
 
-            $this->database->table(self::ACCOUNT_TABLE)
-                ->where('id', $withdrawal->accountId->value)
-                ->update([
-                    'balance' => $account->balance(),
-                    'updated_at' => $account->updatedAt()->format('Y-m-d H:i:s'),
-                ]);
+            $this->accountRepository->update($account);
 
             $this->finish($withdrawal);
 
@@ -131,25 +127,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
         return $collection;
     }
 
-    private function findAccountByIdLock(AccountId $id): Account
-    {
-        $data = $this->database->table(self::ACCOUNT_TABLE)
-            ->where('id', $id->value)
-            ->lockForUpdate()
-            ->first();
-
-        if (! $data) {
-            throw new AccountNotFoundException($id->value);
-        }
-
-        return new Account(
-            id: new AccountId($data->id),
-            name: $data->name,
-            balance: (float) $data->balance,
-            createdAt: new DateTime($data->created_at),
-            updatedAt: new DateTime($data->updated_at),
-        );
-    }
+    // ... método findAccountByIdLock removido, agora usando DbAccountRepository
 
     private function findWithdrawalMethod(object $row): WithdrawalMethod
     {

@@ -5,6 +5,7 @@ namespace Test\Unit\Infrastructure\Repository\Db;
 use App\Domain\Collection\WithdrawalCollection;
 use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
 use App\Domain\Entity\Account;
+use App\Infrastructure\Repository\Db\DbAccountRepository;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\ValueObject\Account\AccountId;
@@ -57,28 +58,20 @@ class DbWithdrawalRepositoryTest extends TestCase
             new \DateTime('2023-01-01 10:00:00')
         );
 
+
         $database = Mockery::mock(Db::class);
         $database->shouldReceive('beginTransaction')->once();
-        $database->shouldReceive('table')->with('account')->andReturnSelf();
-        $database->shouldReceive('where')->with('id', $accountId->value)->andReturnSelf();
-        $database->shouldReceive('lockForUpdate')->andReturnSelf();
-        $database->shouldReceive('first')->andReturn(
-            (object) [
-                'id' => $account->id->value,
-                'name' => $account->name,
-                'balance' => $account->balance(),
-                'created_at' => $account->createdAt->format('Y-m-d H:i:s'),
-                'updated_at' => $account->updatedAt()->format('Y-m-d H:i:s'),
-            ]
-        );
-        $database->shouldReceive('update')->once();
         $database->shouldReceive('commit')->once();
         $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
         $database->shouldReceive('where')->with('id', $withdrawal->id->value)->andReturnSelf();
         $database->shouldReceive('update')->once();
 
-        $repo = new DbWithdrawalRepository($database);
+        // Mock DbAccountRepository
+        $accountRepository = Mockery::mock(DbAccountRepository::class);
+        $accountRepository->shouldReceive('findByIdLock')->with($accountId)->andReturn($account);
+        $accountRepository->shouldReceive('update')->once();
 
+        $repo = new DbWithdrawalRepository($database, $accountRepository);
         $repo->withdraw($withdrawal);
 
         $this->assertTrue($withdrawal->done());
