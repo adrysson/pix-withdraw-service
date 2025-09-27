@@ -9,7 +9,6 @@ use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
 use App\Repository\AccountRepository;
-use App\Repository\WithdrawalRepository;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -35,15 +34,11 @@ class FundsWithdrawerTest extends TestCase
         );
 
         $accountRepository = $this->createMock(AccountRepository::class);
-        $accountRepository->expects($this->once())->method('findById')
-            ->willReturn($account);
-
-        $withdrawalRepository = $this->createMock(WithdrawalRepository::class);
-        $withdrawalRepository->expects($this->once())->method('save');
+        $accountRepository->expects($this->once())->method('startWithdrawal');
+        $accountRepository->expects($this->once())->method('withdraw');
 
         $service = new FundsWithdrawer(
             accountRepository: $accountRepository,
-            withdrawalRepository: $withdrawalRepository,
         );
 
         $service->withdraw(
@@ -52,7 +47,5 @@ class FundsWithdrawerTest extends TestCase
             amount: 40.0,
             schedule: null,
         );
-
-        $this->assertEquals(60.0, $account->balance());
     }
 }

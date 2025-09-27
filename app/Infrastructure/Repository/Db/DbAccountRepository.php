@@ -99,7 +99,7 @@ class DbAccountRepository implements AccountRepository
             ->update([
                 'done' => $withdrawal->done(),
                 'error' => $throwable !== null,
-                'error_reason' => $throwable->getMessage(),
+                'error_reason' => $throwable?->getMessage(),
                 'updated_at' => $withdrawal->updatedAt()->format('Y-m-d H:i:s'),
             ]);
     }
