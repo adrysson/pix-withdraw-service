@@ -4,27 +4,18 @@ namespace Test\Unit\Application\CreateWithdrawal;
 
 use App\Application\CreateWithdrawal\WithdrawalCreator;
 use App\Application\Withdraw\Withdrawer;
-use App\Domain\Entity\Account;
-use App\Domain\ValueObject\Account\AccountId;
 use App\Repository\WithdrawalRepository;
-use DateTime;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Test\Stubs\Domain\Entity\AccountStub;
 use Test\Stubs\Domain\Entity\PixStub;
 
 class WithdrawalCreatorTest extends TestCase
 {
     public function testWithdrawCallsAccountWithdrawAndRepositoryUpdate(): void
     {
-        $id = AccountId::generate();
-        $createdAt = new DateTime();
-        $updatedAt = new DateTime();
-        $account = new Account(
-            id: $id,
-            name: 'John Doe',
+        $account = AccountStub::random(
             balance: 100.0,
-            createdAt: $createdAt,
-            updatedAt: $updatedAt
         );
         $method = PixStub::random();
 

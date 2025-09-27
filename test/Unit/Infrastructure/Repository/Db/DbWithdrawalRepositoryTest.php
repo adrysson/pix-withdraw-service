@@ -4,7 +4,6 @@ namespace Test\Unit\Infrastructure\Repository\Db;
 
 use App\Domain\Collection\WithdrawalCollection;
 use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
-use App\Domain\Entity\Account;
 use App\Infrastructure\Repository\Db\DbAccountRepository;
 use App\Domain\Entity\Pix;
 use App\Infrastructure\Repository\Db\DbPixRepository;
@@ -14,6 +13,7 @@ use Hyperf\DbConnection\Db;
 use PHPUnit\Framework\TestCase;
 use DateTime;
 use Mockery;
+use Test\Stubs\Domain\Entity\AccountStub;
 use Test\Stubs\Domain\Entity\WithdrawalStub;
 
 class DbWithdrawalRepositoryTest extends TestCase
@@ -48,12 +48,8 @@ class DbWithdrawalRepositoryTest extends TestCase
             amount: 70.0,
         );
 
-        $account = new Account(
-            $withdrawal->accountId,
-            'Test User',
-            90.0,
-            new \DateTime('2023-01-01 10:00:00'),
-            new \DateTime('2023-01-01 10:00:00')
+        $account = AccountStub::random(
+            balance: 90.0,
         );
 
 
