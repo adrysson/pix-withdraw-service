@@ -10,19 +10,17 @@ use App\Domain\Entity\Pix;
 use App\Infrastructure\Repository\Db\DbPixRepository;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
 use App\Domain\Entity\Withdrawal;
-use App\Domain\ValueObject\Account\AccountId;
-use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use Hyperf\DbConnection\Db;
 use PHPUnit\Framework\TestCase;
 use DateTime;
 use Mockery;
-use Test\Stubs\Domain\Entity\PixStub;
+use Test\Stubs\Domain\Entity\WithdrawalStub;
 
 class DbWithdrawalRepositoryTest extends TestCase
 {
     public function testcreateWithdrawalInsertsWithdrawalAndPix(): void
     {
-        $withdrawal = $this->makeWithdrawal();
+        $withdrawal = WithdrawalStub::random();
 
         $database = Mockery::mock(Db::class);
         $database->shouldReceive('beginTransaction')->once();
@@ -46,20 +44,12 @@ class DbWithdrawalRepositoryTest extends TestCase
 
     public function testWithdrawUpdatesAccountAndFinishesWithdrawal(): void
     {
-        $accountId = new AccountId('6437e406-e581-4208-9819-5510dba8ef79');
-        $withdrawal = new Withdrawal(
-            new WithdrawalId('b7e6a1c2-1d2e-4f3a-9b4c-2a1b3c4d5e6f'),
-            $accountId,
-            PixStub::random(),
-            10.0,
-            null,
-            false,
-            new DateTime('2023-01-01 10:00:00'),
-            new DateTime('2023-01-01 10:00:00')
+        $withdrawal = WithdrawalStub::random(
+            amount: 70.0,
         );
 
         $account = new Account(
-            $accountId,
+            $withdrawal->accountId,
             'Test User',
             90.0,
             new \DateTime('2023-01-01 10:00:00'),
@@ -75,7 +65,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $database->shouldReceive('update')->once();
 
         $accountRepository = Mockery::mock(DbAccountRepository::class);
-        $accountRepository->shouldReceive('findById')->with($database, $accountId, true)->andReturn($account);
+        $accountRepository->shouldReceive('findById')->with($database, $withdrawal->accountId, true)->andReturn($account);
         $accountRepository->shouldReceive('update')->once();
 
         $pixRepository = Mockery::mock(DbPixRepository::class);
@@ -89,16 +79,7 @@ class DbWithdrawalRepositoryTest extends TestCase
 
     public function testFinishWithdrawalUpdatesWithdrawal(): void
     {
-        $withdrawal = new Withdrawal(
-            new WithdrawalId('b7e6a1c2-1d2e-4f3a-9b4c-2a1b3c4d5e6f'),
-            new AccountId('6437e406-e581-4208-9819-5510dba8ef79'),
-            PixStub::random(),
-            100.0,
-            null,
-            true,
-            new DateTime('2023-01-01 10:00:00'),
-            new DateTime('2023-01-01 10:00:00')
-        );
+        $withdrawal = WithdrawalStub::random();
 
         $database = Mockery::mock(Db::class);
         $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
@@ -113,20 +94,6 @@ class DbWithdrawalRepositoryTest extends TestCase
 
         $repo->finish($withdrawal, null);
         $this->assertTrue($withdrawal->done());
-    }
-
-    private function makeWithdrawal(): Withdrawal
-    {
-        return new Withdrawal(
-            new WithdrawalId('c1d2e3f4-5678-1234-9abc-def012345678'),
-            new AccountId('c1d2e3f4-5678-1234-9abc-def012345678'),
-            PixStub::random(),
-            100.0,
-            null,
-            false,
-            new \DateTime('2023-01-01 10:00:00'),
-            new \DateTime('2023-01-01 10:00:00')
-        );
     }
 
     public function testFindPendingWithdrawalsReturnsCollection(): void

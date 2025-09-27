@@ -5,30 +5,16 @@ namespace Test\Unit\Application\FinishPendingWithdrawals;
 use App\Application\FinishPendingWithdrawals\FinishPendingWithdrawals;
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\Collection\WithdrawalCollection;
-use App\Domain\Entity\Withdrawal;
-use App\Domain\ValueObject\Account\AccountId;
 use App\Repository\WithdrawalRepository;
 use PHPUnit\Framework\TestCase;
-use Test\Stubs\Domain\Entity\PixStub;
+use Test\Stubs\Domain\Entity\WithdrawalStub;
 
 class FinishPendingWithdrawalsTest extends TestCase
 {
     public function testExecuteCallsWithdrawerForEachPendingWithdrawal(): void
     {
-        $accountId = AccountId::generate();
-        $method = PixStub::random();
-        $withdrawal1 = Withdrawal::create(
-            accountId: $accountId,
-            method: $method,
-            amount: 60.0,
-            schedule: null,
-        );
-        $withdrawal2 = Withdrawal::create(
-            accountId: $accountId,
-            method: $method,
-            amount: 70.0,
-            schedule: null,
-        );
+        $withdrawal1 = WithdrawalStub::random();
+        $withdrawal2 = WithdrawalStub::random();
 
         $collection = new WithdrawalCollection([
             $withdrawal1,

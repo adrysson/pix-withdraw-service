@@ -3,13 +3,11 @@
 namespace Test\Unit\Application\Withdraw;
 
 use App\Application\Withdraw\Withdrawer;
-use App\Domain\Entity\Withdrawal;
 use App\Domain\EventDispatcher;
-use App\Domain\ValueObject\Account\AccountId;
 use App\Repository\WithdrawalRepository;
 use PHPUnit\Framework\TestCase;
 use Mockery;
-use Test\Stubs\Domain\Entity\PixStub;
+use Test\Stubs\Domain\Entity\WithdrawalStub;
 
 class WithdrawerTest extends TestCase
 {
@@ -20,13 +18,8 @@ class WithdrawerTest extends TestCase
 
     public function testExecuteCallsWithdrawOnRepository(): void
     {
-        $accountId = AccountId::generate();
-        $method = PixStub::random();
-        $withdrawal = Withdrawal::create(
-            accountId: $accountId,
-            method: $method,
+        $withdrawal = WithdrawalStub::random(
             amount: 60.0,
-            schedule: null,
         );
 
         $repository = Mockery::mock(WithdrawalRepository::class);
@@ -44,13 +37,8 @@ class WithdrawerTest extends TestCase
 
     public function testExecuteCallsFinishWithdrawalOnException(): void
     {
-        $accountId = AccountId::generate();
-        $method = PixStub::random();
-        $withdrawal = Withdrawal::create(
-            accountId: $accountId,
-            method: $method,
+        $withdrawal = WithdrawalStub::random(
             amount: 60.0,
-            schedule: null,
         );
         $exception = new \Exception('fail');
         $repository = Mockery::mock(WithdrawalRepository::class);
