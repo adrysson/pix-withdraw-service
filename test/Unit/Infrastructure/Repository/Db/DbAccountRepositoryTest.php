@@ -2,6 +2,7 @@
 
 namespace Test\Unit\Infrastructure\Repository\Db;
 
+use App\Domain\Collection\WithdrawalCollection;
 use App\Infrastructure\Repository\Db\DbAccountRepository;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
@@ -128,5 +129,59 @@ class DbAccountRepositoryTest extends TestCase
             new \DateTime('2023-01-01 10:00:00'),
             new \DateTime('2023-01-01 10:00:00')
         );
+    }
+
+    public function testFindPendingWithdrawalsReturnsCollection(): void
+    {
+        $now = new DateTime();
+        $past = (clone $now)->modify('-1 day')->format('Y-m-d H:i:s');
+        $rows = [
+            (object) [
+                'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+                'account_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+                'method' => 'pix',
+                'amount' => 100.0,
+                'scheduled' => true,
+                'scheduled_for' => $past,
+                'done' => false,
+                'created_at' => $past,
+                'updated_at' => $past,
+            ],
+        ];
+
+        $database = Mockery::mock(Db::class);
+        $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
+        $database->shouldReceive('where')->with('done', false)->andReturnSelf();
+        $database->shouldReceive('where')->with('scheduled', true)->andReturnSelf();
+        $database->shouldReceive('whereNotNull')->with('scheduled_for')->andReturnSelf();
+        $database->shouldReceive('where')->with('scheduled_for', '<', Mockery::type('string'))->andReturnSelf();
+        $database->shouldReceive('get')->andReturn($rows);
+
+        $pixRow = (object) [
+            'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+            'type' => 'email',
+            'key' => 'user@example.com',
+            'created_at' => $past,
+            'updated_at' => $past,
+        ];
+        $database->shouldReceive('table')->with('account_withdraw_pix')->andReturnSelf();
+        $database->shouldReceive('where')->with('account_withdraw_id', 'c1d2e3f4-5678-1234-9abc-def012345678')->andReturnSelf();
+        $database->shouldReceive('first')->andReturn($pixRow);
+
+        $repo = new DbAccountRepository($database);
+        $result = $repo->findPendingWithdrawals();
+
+        $this->assertInstanceOf(WithdrawalCollection::class, $result);
+        $this->assertCount(1, $result->all());
+        $withdrawal = $result->all()[0];
+        $this->assertInstanceOf(Withdrawal::class, $withdrawal);
+        $this->assertEquals('c1d2e3f4-5678-1234-9abc-def012345678', $withdrawal->id->value);
+        $this->assertEquals('c1d2e3f4-5678-1234-9abc-def012345678', $withdrawal->accountId->value);
+        $this->assertEquals(100.0, $withdrawal->amount);
+        $this->assertFalse($withdrawal->done());
+        $this->assertInstanceOf(Pix::class, $withdrawal->method);
+        /** @var Pix $method */
+        $method = $withdrawal->method;
+        $this->assertEquals('user@example.com', $method->key->value);
     }
 }

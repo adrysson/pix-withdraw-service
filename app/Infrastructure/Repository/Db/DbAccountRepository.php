@@ -2,12 +2,17 @@
 
 namespace App\Infrastructure\Repository\Db;
 
+use App\Domain\Collection\WithdrawalCollection;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
+use App\Domain\Entity\WithdrawalMethod;
+use App\Domain\Enum\WithdrawalMethodType;
 use App\Repository\AccountRepository;
 use App\Domain\Exception\AccountNotFoundException;
 use App\Domain\ValueObject\Account\AccountId;
+use App\Infrastructure\Repository\Db\Mapper\PixMapper;
+use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
 use Hyperf\DbConnection\Db;
 use DateTime;
 use Throwable;
@@ -104,6 +109,28 @@ class DbAccountRepository implements AccountRepository
             ]);
     }
 
+    public function findPendingWithdrawals(): WithdrawalCollection
+    {
+        $now = (new DateTime())->format('Y-m-d H:i:s');
+
+        $rows = $this->database->table(self::WITHDRAWAL_TABLE)
+            ->where('done', false)
+            ->where('scheduled', true)
+            ->whereNotNull('scheduled_for')
+            ->where('scheduled_for', '<', $now)
+            ->get();
+
+        $collection = new WithdrawalCollection();
+
+        foreach ($rows as $row) {
+            $method = $this->findWithdrawalMethod($row);
+            $withdrawal = WithdrawalMapper::mapWithdrawal($row, $method);
+            $collection->add($withdrawal);
+        }
+
+        return $collection;
+    }
+
     private function findAccountByIdLock(AccountId $id): Account
     {
         $data = $this->database->table(self::ACCOUNT_TABLE)
@@ -122,5 +149,21 @@ class DbAccountRepository implements AccountRepository
             createdAt: new DateTime($data->created_at),
             updatedAt: new DateTime($data->updated_at),
         );
+    }
+
+    private function findWithdrawalMethod(object $row): WithdrawalMethod
+    {
+        return match ($row->method) {
+            WithdrawalMethodType::PIX->value => $this->findPix($row->id),
+        };
+    }
+
+    private function findPix(string $withdrawalId): Pix
+    {
+        $row = $this->database->table(self::PIX_TABLE)
+            ->where('account_withdraw_id', $withdrawalId)
+            ->first();
+
+        return PixMapper::mapPix($row);
     }
 }
