@@ -6,13 +6,13 @@ use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use App\Application\Withdraw\Withdrawer;
 
 class WithdrawalCreator
 {
     public function __construct(
-        private AccountRepository $accountRepository,
+        private WithdrawalRepository $accountRepository,
         private Withdrawer $withdrawer,
     ) {
     }

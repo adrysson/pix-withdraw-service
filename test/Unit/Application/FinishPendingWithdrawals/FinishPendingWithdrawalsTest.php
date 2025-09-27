@@ -10,7 +10,7 @@ use App\Domain\Entity\Withdrawal;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -43,7 +43,7 @@ class FinishPendingWithdrawalsTest extends TestCase
             $withdrawal2,
         ]);
 
-        $accountRepository = $this->createMock(AccountRepository::class);
+        $accountRepository = $this->createMock(WithdrawalRepository::class);
         $accountRepository->expects($this->once())
             ->method('findPendingWithdrawals')
             ->willReturn($collection);

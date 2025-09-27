@@ -2,13 +2,13 @@
 
 namespace App\Application\FinishPendingWithdrawals;
 
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use App\Application\Withdraw\Withdrawer;
 
 class FinishPendingWithdrawals
 {
     public function __construct(
-        private AccountRepository $accountRepository,
+        private WithdrawalRepository $accountRepository,
         private Withdrawer $withdrawer,
     ) {
     }

@@ -9,7 +9,7 @@ use App\Domain\Entity\Pix;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use DateTime;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +35,7 @@ class WithdrawalCreatorTest extends TestCase
             updatedAt: new DateTime()
         );
 
-        $accountRepository = Mockery::mock(AccountRepository::class);
+        $accountRepository = Mockery::mock(WithdrawalRepository::class);
         $accountRepository->shouldReceive('createWithdrawal');
 
         $withdrawer = Mockery::mock(Withdrawer::class);

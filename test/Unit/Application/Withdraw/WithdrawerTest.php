@@ -8,7 +8,7 @@ use App\Domain\Entity\Withdrawal;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Mockery;
@@ -36,7 +36,7 @@ class WithdrawerTest extends TestCase
             schedule: null,
         );
 
-        $repository = Mockery::mock(AccountRepository::class);
+        $repository = Mockery::mock(WithdrawalRepository::class);
         $repository->shouldReceive('withdraw')
             ->once()
             ->with($withdrawal);
@@ -62,7 +62,7 @@ class WithdrawerTest extends TestCase
             schedule: null,
         );
         $exception = new \Exception('fail');
-        $repository = Mockery::mock(AccountRepository::class);
+        $repository = Mockery::mock(WithdrawalRepository::class);
         $repository->shouldReceive('withdraw')
             ->andThrow($exception);
         $repository->shouldReceive('finishWithdrawal')

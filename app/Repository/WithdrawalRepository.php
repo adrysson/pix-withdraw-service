@@ -6,7 +6,7 @@ use App\Domain\Collection\WithdrawalCollection;
 use App\Domain\Entity\Withdrawal;
 use Throwable;
 
-interface AccountRepository
+interface WithdrawalRepository
 {
     public function createWithdrawal(Withdrawal $withdrawal);
 

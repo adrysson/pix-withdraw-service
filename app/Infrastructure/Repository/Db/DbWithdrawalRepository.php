@@ -8,7 +8,7 @@ use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\Enum\WithdrawalMethodType;
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use App\Domain\Exception\AccountNotFoundException;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
@@ -17,7 +17,7 @@ use Hyperf\DbConnection\Db;
 use DateTime;
 use Throwable;
 
-class DbWithdrawalRepository implements AccountRepository
+class DbWithdrawalRepository implements WithdrawalRepository
 {
     private const ACCOUNT_TABLE = 'account';
 

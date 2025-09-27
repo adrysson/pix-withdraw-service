@@ -3,13 +3,13 @@
 namespace App\Application\Withdraw;
 
 use App\Domain\Entity\Withdrawal;
-use App\Repository\AccountRepository;
+use App\Repository\WithdrawalRepository;
 use Throwable;
 
 class Withdrawer
 {
     public function __construct(
-        private AccountRepository $accountRepository,
+        private WithdrawalRepository $accountRepository,
     ) {
     }
 
