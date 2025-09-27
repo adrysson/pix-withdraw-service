@@ -5,7 +5,7 @@ namespace Test\Unit\Application\FinishPendingWithdrawals;
 use App\Application\FinishPendingWithdrawals\FinishPendingWithdrawals;
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\Collection\WithdrawalCollection;
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use PHPUnit\Framework\TestCase;
 use Test\Stubs\Domain\Entity\WithdrawalStub;
 

@@ -6,7 +6,7 @@ use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use App\Application\Withdraw\Withdrawer;
 
 class WithdrawalCreator

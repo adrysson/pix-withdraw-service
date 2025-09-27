@@ -4,7 +4,7 @@ namespace Test\Unit\Application\Withdraw;
 
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\EventDispatcher;
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use Test\Stubs\Domain\Entity\WithdrawalStub;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Domain\Repository;
 
 use App\Domain\Collection\WithdrawalCollection;
 use App\Domain\Entity\Withdrawal;

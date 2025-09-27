@@ -4,7 +4,7 @@ namespace App\Application\Withdraw;
 
 use App\Domain\Entity\Withdrawal;
 use App\Domain\EventDispatcher;
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use Throwable;
 
 class Withdrawer

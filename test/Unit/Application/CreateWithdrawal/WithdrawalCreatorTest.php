@@ -4,7 +4,7 @@ namespace Test\Unit\Application\CreateWithdrawal;
 
 use App\Application\CreateWithdrawal\WithdrawalCreator;
 use App\Application\Withdraw\Withdrawer;
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Test\Stubs\Domain\Entity\AccountStub;

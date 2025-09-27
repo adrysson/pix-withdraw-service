@@ -9,7 +9,7 @@ use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\Enum\WithdrawalMethodType;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use App\Infrastructure\Repository\Db\DbPixRepository;
 use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
 use Hyperf\DbConnection\Db;

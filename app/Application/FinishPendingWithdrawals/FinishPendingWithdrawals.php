@@ -2,7 +2,7 @@
 
 namespace App\Application\FinishPendingWithdrawals;
 
-use App\Repository\WithdrawalRepository;
+use App\Domain\Repository\WithdrawalRepository;
 use App\Application\Withdraw\Withdrawer;
 
 class FinishPendingWithdrawals
