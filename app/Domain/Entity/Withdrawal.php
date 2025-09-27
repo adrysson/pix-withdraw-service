@@ -3,14 +3,14 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Entity;
-use App\Domain\ValueObject\EntityId;
+use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
 use DateTime;
 
 class Withdrawal extends Entity
 {
     public function __construct(
-        EntityId $id,
+        WithdrawalId $id,
         public readonly Account $account,
         public readonly WithdrawalMethod $method,
         public readonly float $amount,
@@ -35,7 +35,7 @@ class Withdrawal extends Entity
         self::validate($schedule);
 
         return new self(
-            id: EntityId::generate(),
+            id: WithdrawalId::generate(),
             account: $account,
             method: $method,
             amount: $amount,

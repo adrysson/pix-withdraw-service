@@ -3,9 +3,9 @@
 namespace Test\Unit\Infrastructure\Repository\Db;
 
 use App\Infrastructure\Repository\Db\DbAccountRepository;
-use App\Domain\ValueObject\EntityId;
 use App\Domain\Exception\AccountNotFoundException;
 use App\Domain\Entity\Account;
+use App\Domain\ValueObject\Account\AccountId;
 use Hyperf\DbConnection\Db;
 use PHPUnit\Framework\TestCase;
 use DateTime;
@@ -16,7 +16,7 @@ class DbAccountRepositoryTest extends TestCase
     public function testFindByIdReturnsAccount(): void
     {
         $id = '6437e406-e581-4208-9819-5510dba8ef79';
-        $entityId = new EntityId($id);
+        $entityId = new AccountId($id);
         $row = (object) [
             'id' => $id,
             'name' => 'Test User',
@@ -44,7 +44,7 @@ class DbAccountRepositoryTest extends TestCase
     public function testFindByIdThrowsIfNotFound(): void
     {
         $id = '6437e406-e581-4208-9819-5510dba8ef79';
-        $entityId = new EntityId($id);
+        $entityId = new AccountId($id);
 
         $database = Mockery::mock(Db::class);
         $database->shouldReceive('table')->with('account')->andReturnSelf();

@@ -2,15 +2,14 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Enum\WithdrawalMethodType;
-use App\Domain\Enum\WithdrawMethodType;
-use App\Domain\ValueObject\EntityId;
+use App\Domain\ValueObject\Pix\PixId;
 use App\Domain\ValueObject\Pix\PixKey;
 use DateTime;
 
 class Pix extends WithdrawalMethod
 {
     public function __construct(
-        EntityId $id,
+        PixId $id,
         public readonly PixKey $key,
         DateTime $createdAt,
         DateTime $updatedAt,
@@ -31,7 +30,7 @@ class Pix extends WithdrawalMethod
         PixKey $key,
     ): self {
         return new self(
-            id: EntityId::generate(),
+            id: PixId::generate(),
             key: $key,
             createdAt: new DateTime(),
             updatedAt: new DateTime(),

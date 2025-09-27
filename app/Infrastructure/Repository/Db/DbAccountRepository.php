@@ -3,9 +3,9 @@
 namespace App\Infrastructure\Repository\Db;
 
 use App\Domain\Entity\Account;
-use App\Domain\ValueObject\EntityId;
 use App\Repository\AccountRepository;
 use App\Domain\Exception\AccountNotFoundException;
+use App\Domain\ValueObject\Account\AccountId;
 use Hyperf\DbConnection\Db;
 use DateTime;
 
@@ -16,7 +16,7 @@ class DbAccountRepository implements AccountRepository
     ) {  
     }
 
-    public function findById(EntityId $id): Account
+    public function findById(AccountId $id): Account
     {
         $data = $this->database->table('account')->where('id', $id->value)->first();
 
@@ -25,7 +25,7 @@ class DbAccountRepository implements AccountRepository
         }
 
         return new Account(
-            id: new EntityId($data->id),
+            id: new AccountId($data->id),
             name: $data->name,
             balance: (float) $data->balance,
             createdAt: new DateTime($data->created_at),

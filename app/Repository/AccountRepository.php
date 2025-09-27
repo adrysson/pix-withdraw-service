@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Domain\Entity\Account;
-use App\Domain\ValueObject\EntityId;
+use App\Domain\ValueObject\Account\AccountId;
 
 interface AccountRepository
 {
-    public function findById(EntityId $id): Account;
+    public function findById(AccountId $id): Account;
 }

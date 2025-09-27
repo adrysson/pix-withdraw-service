@@ -4,8 +4,8 @@
 namespace Test\Unit\Domain\Entity;
 
 use App\Domain\Entity\Account;
-use App\Domain\ValueObject\EntityId;
 use App\Domain\Exception\InsufficientBalanceException;
+use App\Domain\ValueObject\Account\AccountId;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ class AccountTest extends TestCase
 {
     public function testCreateAccountWithValidData(): void
     {
-        $id = EntityId::generate();
+        $id = AccountId::generate();
         $createdAt = new DateTime();
         $updatedAt = new DateTime();
         $account = new Account(
@@ -31,7 +31,7 @@ class AccountTest extends TestCase
     public function testSubtractBalanceDecreasesBalance(): void
     {
         $account = new Account(
-            id: EntityId::generate(),
+            id: AccountId::generate(),
             name: 'Jane Doe',
             balance: 200.0,
             createdAt: new DateTime(),
@@ -45,7 +45,7 @@ class AccountTest extends TestCase
     {
         $this->expectException(InsufficientBalanceException::class);
         $account = new Account(
-            id: EntityId::generate(),
+            id: AccountId::generate(),
             name: 'Jane Doe',
             balance: 10.0,
             createdAt: new DateTime(),

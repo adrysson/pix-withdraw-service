@@ -5,8 +5,9 @@ namespace Test\Unit\Application\WithdrawFunds;
 use App\Application\WithdrawFunds\FundsWithdrawer;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
-use App\Domain\ValueObject\EntityId;
+use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
+use App\Domain\ValueObject\Pix\PixId;
 use App\Repository\AccountRepository;
 use App\Repository\WithdrawalRepository;
 use DateTime;
@@ -16,7 +17,7 @@ class FundsWithdrawerTest extends TestCase
 {
     public function testWithdrawCallsAccountWithdrawAndRepositoryUpdate(): void
     {
-        $id = EntityId::generate();
+        $id = AccountId::generate();
         $createdAt = new DateTime();
         $updatedAt = new DateTime();
         $account = new Account(
@@ -27,7 +28,7 @@ class FundsWithdrawerTest extends TestCase
             updatedAt: $updatedAt
         );
         $method = new Pix(
-            id: EntityId::generate(),
+            id: PixId::generate(),
             key: new EmailPixKey('johndoe@gmail.com'),
             createdAt: new DateTime(),
             updatedAt: new DateTime()

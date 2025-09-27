@@ -4,13 +4,13 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity;
 use App\Domain\Exception\InsufficientBalanceException;
-use App\Domain\ValueObject\EntityId;
+use App\Domain\ValueObject\Account\AccountId;
 use DateTime;
 
 class Account extends Entity
 {
     public function __construct(
-        EntityId $id,
+        AccountId $id,
         public readonly string $name,
         private float $balance,
         DateTime $createdAt,
