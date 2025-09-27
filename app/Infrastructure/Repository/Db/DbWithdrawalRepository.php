@@ -8,9 +8,9 @@ use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\Enum\WithdrawalMethodType;
-use App\Domain\ValueObject\Account\AccountId;
+use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use App\Repository\WithdrawalRepository;
-use App\Infrastructure\Repository\Db\Mapper\PixMapper;
+use App\Infrastructure\Repository\Db\DbPixRepository;
 use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
 use Hyperf\DbConnection\Db;
 use DateTime;
@@ -20,15 +20,16 @@ class DbWithdrawalRepository implements WithdrawalRepository
 {
     private const WITHDRAWAL_TABLE = 'account_withdraw';
 
-    private const PIX_TABLE = 'account_withdraw_pix';
-
     private DbAccountRepository $accountRepository;
+    private DbPixRepository $pixRepository;
 
     public function __construct(
         private Db $database,
         ?DbAccountRepository $accountRepository = null,
+        ?DbPixRepository $pixRepository = null,
     ) {
         $this->accountRepository = $accountRepository ?: new DbAccountRepository($this->database);
+        $this->pixRepository = $pixRepository ?: new DbPixRepository($this->database);
     }
 
     public function create(Withdrawal $withdrawal): void
@@ -54,15 +55,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
             $method = $withdrawal->method;
 
             if ($method instanceof Pix) {
-                $this->database->table(self::PIX_TABLE)
-                    ->insert([
-                        'id' => $method->id->value,
-                        'account_withdraw_id' => $withdrawal->id->value,
-                        'type' => $method->key->keyType()->value,
-                        'key' => $method->key->value,
-                        'created_at' => $method->createdAt->format('Y-m-d H:i:s'),
-                        'updated_at' => $method->updatedAt()->format('Y-m-d H:i:s'),
-                    ]);
+                $this->pixRepository->insert($method, $withdrawal->id);
             }
 
             $this->database->commit();
@@ -75,8 +68,8 @@ class DbWithdrawalRepository implements WithdrawalRepository
     public function withdraw(Withdrawal $withdrawal): void
     {
         $this->database->beginTransaction();
-        try {
 
+        try {
             $account = $this->accountRepository->findById(
                 id: $withdrawal->accountId,
                 lockForUpdate: true,
@@ -131,8 +124,6 @@ class DbWithdrawalRepository implements WithdrawalRepository
         return $collection;
     }
 
-    // ... método findAccountByIdLock removido, agora usando DbAccountRepository
-
     private function findWithdrawalMethod(object $row): WithdrawalMethod
     {
         return match ($row->method) {
@@ -142,10 +133,6 @@ class DbWithdrawalRepository implements WithdrawalRepository
 
     private function findPix(string $withdrawalId): Pix
     {
-        $row = $this->database->table(self::PIX_TABLE)
-            ->where('account_withdraw_id', $withdrawalId)
-            ->first();
-
-        return PixMapper::mapPix($row);
+        return $this->pixRepository->findByWithdrawalId(new WithdrawalId($withdrawalId));
     }
 }
