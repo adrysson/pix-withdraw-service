@@ -3,16 +3,13 @@
 namespace Test\Unit\Application\Withdraw;
 
 use App\Application\Withdraw\Withdrawer;
-use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\EventDispatcher;
 use App\Domain\ValueObject\Account\AccountId;
-use App\Domain\ValueObject\Pix\EmailPixKey;
-use App\Domain\ValueObject\Pix\PixId;
 use App\Repository\WithdrawalRepository;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Mockery;
+use Test\Stubs\Domain\Entity\PixStub;
 
 class WithdrawerTest extends TestCase
 {
@@ -24,12 +21,7 @@ class WithdrawerTest extends TestCase
     public function testExecuteCallsWithdrawOnRepository(): void
     {
         $accountId = AccountId::generate();
-        $method = new Pix(
-            id: PixId::generate(),
-            key: new EmailPixKey('johndoe@gmail.com'),
-            createdAt: new DateTime(),
-            updatedAt: new DateTime()
-        );
+        $method = PixStub::random();
         $withdrawal = Withdrawal::create(
             accountId: $accountId,
             method: $method,
@@ -53,12 +45,7 @@ class WithdrawerTest extends TestCase
     public function testExecuteCallsFinishWithdrawalOnException(): void
     {
         $accountId = AccountId::generate();
-        $method = new Pix(
-            id: PixId::generate(),
-            key: new EmailPixKey('johndoe@gmail.com'),
-            createdAt: new DateTime(),
-            updatedAt: new DateTime()
-        );
+        $method = PixStub::random();
         $withdrawal = Withdrawal::create(
             accountId: $accountId,
             method: $method,

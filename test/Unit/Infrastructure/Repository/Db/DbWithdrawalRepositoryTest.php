@@ -11,13 +11,12 @@ use App\Infrastructure\Repository\Db\DbPixRepository;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\ValueObject\Account\AccountId;
-use App\Domain\ValueObject\Pix\EmailPixKey;
-use App\Domain\ValueObject\Pix\PixId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use Hyperf\DbConnection\Db;
 use PHPUnit\Framework\TestCase;
 use DateTime;
 use Mockery;
+use Test\Stubs\Domain\Entity\PixStub;
 
 class DbWithdrawalRepositoryTest extends TestCase
 {
@@ -51,7 +50,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $withdrawal = new Withdrawal(
             new WithdrawalId('b7e6a1c2-1d2e-4f3a-9b4c-2a1b3c4d5e6f'),
             $accountId,
-            $this->makePix(),
+            PixStub::random(),
             10.0,
             null,
             false,
@@ -93,7 +92,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $withdrawal = new Withdrawal(
             new WithdrawalId('b7e6a1c2-1d2e-4f3a-9b4c-2a1b3c4d5e6f'),
             new AccountId('6437e406-e581-4208-9819-5510dba8ef79'),
-            $this->makePix(),
+            PixStub::random(),
             100.0,
             null,
             true,
@@ -116,22 +115,12 @@ class DbWithdrawalRepositoryTest extends TestCase
         $this->assertTrue($withdrawal->done());
     }
 
-    private function makePix(): Pix
-    {
-        return new Pix(
-            new PixId('c1d2e3f4-5678-1234-9abc-def012345678'),
-            new EmailPixKey('test@example.com'),
-            new \DateTime('2023-01-01 10:00:00'),
-            new \DateTime('2023-01-01 10:00:00')
-        );
-    }
-
     private function makeWithdrawal(): Withdrawal
     {
         return new Withdrawal(
             new WithdrawalId('c1d2e3f4-5678-1234-9abc-def012345678'),
             new AccountId('c1d2e3f4-5678-1234-9abc-def012345678'),
-            $this->makePix(),
+            PixStub::random(),
             100.0,
             null,
             false,

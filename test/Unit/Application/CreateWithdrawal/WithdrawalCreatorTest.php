@@ -5,14 +5,12 @@ namespace Test\Unit\Application\CreateWithdrawal;
 use App\Application\CreateWithdrawal\WithdrawalCreator;
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\Entity\Account;
-use App\Domain\Entity\Pix;
 use App\Domain\ValueObject\Account\AccountId;
-use App\Domain\ValueObject\Pix\EmailPixKey;
-use App\Domain\ValueObject\Pix\PixId;
 use App\Repository\WithdrawalRepository;
 use DateTime;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Test\Stubs\Domain\Entity\PixStub;
 
 class WithdrawalCreatorTest extends TestCase
 {
@@ -28,12 +26,7 @@ class WithdrawalCreatorTest extends TestCase
             createdAt: $createdAt,
             updatedAt: $updatedAt
         );
-        $method = new Pix(
-            id: PixId::generate(),
-            key: new EmailPixKey('johndoe@gmail.com'),
-            createdAt: new DateTime(),
-            updatedAt: new DateTime()
-        );
+        $method = PixStub::random();
 
         $withdrawalRepository = Mockery::mock(WithdrawalRepository::class);
         $withdrawalRepository->shouldReceive('create');

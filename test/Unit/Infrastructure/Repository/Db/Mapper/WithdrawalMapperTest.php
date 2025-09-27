@@ -4,14 +4,11 @@ namespace Test\Unit\Infrastructure\Repository\Db\Mapper;
 
 use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
 use App\Domain\Entity\Withdrawal;
-use App\Domain\Entity\Pix;
 use App\Domain\ValueObject\Account\AccountId;
-use App\Domain\ValueObject\Pix\EmailPixKey;
-use App\Domain\ValueObject\Pix\PixId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
-use DateTime;
 use PHPUnit\Framework\TestCase;
+use Test\Stubs\Domain\Entity\PixStub;
 
 class WithdrawalMapperTest extends TestCase
 {
@@ -27,12 +24,7 @@ class WithdrawalMapperTest extends TestCase
             'created_at' => '2023-01-01 10:00:00',
             'updated_at' => '2023-01-01 11:00:00',
         ];
-        $method = new Pix(
-            new PixId('c1d2e3f4-5678-1234-9abc-def012345678'),
-            new EmailPixKey('user@example.com'),
-            new DateTime('2023-01-01 09:00:00'),
-            new DateTime('2023-01-01 09:30:00')
-        );
+        $method = PixStub::random();
 
         $withdrawal = WithdrawalMapper::mapWithdrawal($row, $method);
 
@@ -60,12 +52,7 @@ class WithdrawalMapperTest extends TestCase
             'created_at' => '2023-01-02 10:00:00',
             'updated_at' => '2023-01-02 11:00:00',
         ];
-        $method = new Pix(
-            new PixId('c1d2e3f4-5678-1234-9abc-def012345678'),
-            new EmailPixKey('user2@example.com'),
-            new DateTime('2023-01-02 09:00:00'),
-            new DateTime('2023-01-02 09:30:00')
-        );
+        $method = PixStub::random();
 
         $withdrawal = WithdrawalMapper::mapWithdrawal($row, $method);
 

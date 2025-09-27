@@ -5,26 +5,18 @@ namespace Test\Unit\Application\FinishPendingWithdrawals;
 use App\Application\FinishPendingWithdrawals\FinishPendingWithdrawals;
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\Collection\WithdrawalCollection;
-use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\ValueObject\Account\AccountId;
-use App\Domain\ValueObject\Pix\EmailPixKey;
-use App\Domain\ValueObject\Pix\PixId;
 use App\Repository\WithdrawalRepository;
-use DateTime;
 use PHPUnit\Framework\TestCase;
+use Test\Stubs\Domain\Entity\PixStub;
 
 class FinishPendingWithdrawalsTest extends TestCase
 {
     public function testExecuteCallsWithdrawerForEachPendingWithdrawal(): void
     {
         $accountId = AccountId::generate();
-        $method = new Pix(
-            id: PixId::generate(),
-            key: new EmailPixKey('johndoe@gmail.com'),
-            createdAt: new DateTime(),
-            updatedAt: new DateTime()
-        );
+        $method = PixStub::random();
         $withdrawal1 = Withdrawal::create(
             accountId: $accountId,
             method: $method,
