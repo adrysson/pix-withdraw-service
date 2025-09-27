@@ -32,8 +32,6 @@ class FundsWithdrawer
         $this->accountRepository->startWithdrawal($withdrawal);
 
         try {
-            $withdrawal->schedule?->validateForCreation();
-
             $this->accountRepository->withdraw(
                 accountId: $accountId,
                 withdrawal: $withdrawal,

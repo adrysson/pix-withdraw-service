@@ -45,6 +45,8 @@ class Withdrawal extends Entity
         float $amount,
         ?WithdrawalSchedule $schedule, 
     ): self {
+        $schedule?->validateForCreation();
+
         return new self(
             id: WithdrawalId::generate(),
             accountId: $accountId,
