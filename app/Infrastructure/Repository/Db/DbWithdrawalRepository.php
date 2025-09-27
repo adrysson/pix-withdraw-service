@@ -17,7 +17,7 @@ use Hyperf\DbConnection\Db;
 use DateTime;
 use Throwable;
 
-class DbAccountRepository implements AccountRepository
+class DbWithdrawalRepository implements AccountRepository
 {
     private const ACCOUNT_TABLE = 'account';
 

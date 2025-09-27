@@ -3,7 +3,7 @@
 namespace Test\Unit\Infrastructure\Repository\Db;
 
 use App\Domain\Collection\WithdrawalCollection;
-use App\Infrastructure\Repository\Db\DbAccountRepository;
+use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 use DateTime;
 use Mockery;
 
-class DbAccountRepositoryTest extends TestCase
+class DbWithdrawalRepositoryTest extends TestCase
 {
     public function testcreateWithdrawalInsertsWithdrawalAndPix(): void
     {
@@ -30,7 +30,7 @@ class DbAccountRepositoryTest extends TestCase
         $database->shouldReceive('insert')->once();
         $database->shouldReceive('commit')->once();
 
-        $repo = new DbAccountRepository($database);
+        $repo = new DbWithdrawalRepository($database);
         $repo->createWithdrawal($withdrawal);
         $this->assertFalse($withdrawal->done());
     }
@@ -77,7 +77,7 @@ class DbAccountRepositoryTest extends TestCase
         $database->shouldReceive('where')->with('id', $withdrawal->id->value)->andReturnSelf();
         $database->shouldReceive('update')->once();
 
-        $repo = new DbAccountRepository($database);
+        $repo = new DbWithdrawalRepository($database);
 
         $repo->withdraw($withdrawal);
 
@@ -102,7 +102,7 @@ class DbAccountRepositoryTest extends TestCase
         $database->shouldReceive('where')->with('id', $withdrawal->id->value)->andReturnSelf();
         $database->shouldReceive('update')->once();
 
-        $repo = new DbAccountRepository($database);
+        $repo = new DbWithdrawalRepository($database);
         $repo->finishWithdrawal($withdrawal, null);
         $this->assertTrue($withdrawal->done());
     }
@@ -168,7 +168,7 @@ class DbAccountRepositoryTest extends TestCase
         $database->shouldReceive('where')->with('account_withdraw_id', 'c1d2e3f4-5678-1234-9abc-def012345678')->andReturnSelf();
         $database->shouldReceive('first')->andReturn($pixRow);
 
-        $repo = new DbAccountRepository($database);
+        $repo = new DbWithdrawalRepository($database);
         $result = $repo->findPendingWithdrawals();
 
         $this->assertInstanceOf(WithdrawalCollection::class, $result);
