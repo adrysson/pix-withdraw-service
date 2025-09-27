@@ -42,10 +42,10 @@ class Withdrawal extends Entity
         );
     }
 
-    public function withdraw(Account $account): void
+    public function withdraw(): void
     {
         if (! $this->schedule?->isFuture()) {
-            $account->subtractBalance($this->amount);
+            $this->account->subtractBalance($this->amount);
         }
     }
 }

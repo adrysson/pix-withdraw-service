@@ -32,7 +32,7 @@ class FundsWithdrawer
             schedule: $schedule,
         );
 
-        $withdrawal->withdraw($account);
+        $withdrawal->withdraw();
 
         $this->withdrawalRepository->save($withdrawal);
     }
