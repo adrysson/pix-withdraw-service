@@ -1,8 +1,8 @@
 <?php
 
-namespace Test\Unit\Application\WithdrawFunds;
+namespace Test\Unit\Application\CreateWithdrawal;
 
-use App\Application\WithdrawFunds\FundsWithdrawer;
+use App\Application\CreateWithdrawal\WithdrawalCreator;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
 use App\Domain\ValueObject\Account\AccountId;
@@ -12,7 +12,7 @@ use App\Repository\AccountRepository;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class FundsWithdrawerTest extends TestCase
+class WithdrawalCreatorTest extends TestCase
 {
     public function testWithdrawCallsAccountWithdrawAndRepositoryUpdate(): void
     {
@@ -37,7 +37,7 @@ class FundsWithdrawerTest extends TestCase
         $accountRepository->expects($this->once())->method('startWithdrawal');
         $accountRepository->expects($this->once())->method('withdraw');
 
-        $service = new FundsWithdrawer(
+        $service = new WithdrawalCreator(
             accountRepository: $accountRepository,
         );
 
