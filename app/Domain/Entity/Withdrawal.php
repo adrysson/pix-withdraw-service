@@ -3,10 +3,12 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Entity;
+use App\Domain\Event\WithdrawalPerformed;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
 use App\Domain\ValueObject\Account\AccountId;
 use DateTime;
+use Throwable;
 
 class Withdrawal extends Entity
 {
@@ -32,9 +34,13 @@ class Withdrawal extends Entity
         return $this->done;
     }
 
-    public function markAsDone(): void
+    public function markAsDone(?Throwable $throwable = null): void
     {
         $this->done = true;
+
+        if (! $throwable) {
+            $this->domainEvents->add(new WithdrawalPerformed($this));
+        }
 
         $this->update();
     }

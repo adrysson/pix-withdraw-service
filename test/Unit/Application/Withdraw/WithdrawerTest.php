@@ -5,6 +5,7 @@ namespace Test\Unit\Application\Withdraw;
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
+use App\Domain\EventDispatcher;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
@@ -41,7 +42,10 @@ class WithdrawerTest extends TestCase
             ->once()
             ->with($withdrawal);
 
-        $withdrawer = new Withdrawer($repository);
+        $eventDispatcher = Mockery::mock(EventDispatcher::class);
+        $eventDispatcher->shouldReceive('dispatch');
+
+        $withdrawer = new Withdrawer($repository, $eventDispatcher);
         $withdrawer->execute($withdrawal);
         $this->assertTrue(true);
     }
@@ -69,7 +73,10 @@ class WithdrawerTest extends TestCase
             ->once()
             ->with($withdrawal, $exception);
 
-        $withdrawer = new Withdrawer($repository);
+        $eventDispatcher = Mockery::mock(\App\Domain\EventDispatcher::class);
+        $eventDispatcher->shouldNotReceive('dispatch');
+
+        $withdrawer = new Withdrawer($repository, $eventDispatcher);
         $withdrawer->execute($withdrawal);
         $this->assertTrue(true);
     }

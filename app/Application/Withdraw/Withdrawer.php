@@ -3,6 +3,7 @@
 namespace App\Application\Withdraw;
 
 use App\Domain\Entity\Withdrawal;
+use App\Domain\EventDispatcher;
 use App\Repository\WithdrawalRepository;
 use Throwable;
 
@@ -10,6 +11,7 @@ class Withdrawer
 {
     public function __construct(
         private WithdrawalRepository $withdrawalRepository,
+        private EventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -19,6 +21,10 @@ class Withdrawer
             $this->withdrawalRepository->withdraw($withdrawal);
         } catch (Throwable $throwable) {
             $this->withdrawalRepository->finish($withdrawal, $throwable);
+        }
+
+        foreach ($withdrawal->domainEvents()->all() as $domainEvent) {
+            $this->eventDispatcher->dispatch($domainEvent);
         }
     }
 }

@@ -93,7 +93,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
 
     public function finish(Withdrawal $withdrawal, ?Throwable $throwable = null): void
     {
-        $withdrawal->markAsDone();
+        $withdrawal->markAsDone($throwable);
 
         $this->database->table(self::WITHDRAWAL_TABLE)
             ->where('id', $withdrawal->id->value)
