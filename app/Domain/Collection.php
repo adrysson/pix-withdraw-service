@@ -34,4 +34,9 @@ abstract class Collection implements IteratorAggregate
     {
         return empty($this->items);
     }
+
+    public function add($item): void
+    {
+        $this->items[] = $item;
+    }
 }

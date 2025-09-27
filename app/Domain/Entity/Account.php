@@ -28,4 +28,11 @@ class Account extends Entity
     {
         return $this->balance;
     }
+
+    public function withdraw(Withdrawal $withdrawal): void
+    {
+        $this->balance -= $withdrawal->amount;
+
+        $this->withdrawals->add($withdrawal);
+    }
 }
