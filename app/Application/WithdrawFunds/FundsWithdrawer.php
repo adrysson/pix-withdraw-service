@@ -16,7 +16,7 @@ class FundsWithdrawer
     ) {
     }
 
-    public function withdraw(
+    public function execute(
         AccountId $accountId,
         WithdrawalMethod $method,
         float $amount,

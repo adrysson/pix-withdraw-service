@@ -41,7 +41,7 @@ class FundsWithdrawerTest extends TestCase
             accountRepository: $accountRepository,
         );
 
-        $service->withdraw(
+        $service->execute(
             accountId: $account->id,
             method: $method,
             amount: 40.0,
