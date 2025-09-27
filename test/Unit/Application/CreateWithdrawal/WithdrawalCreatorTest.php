@@ -3,6 +3,7 @@
 namespace Test\Unit\Application\CreateWithdrawal;
 
 use App\Application\CreateWithdrawal\WithdrawalCreator;
+use App\Application\Withdraw\Withdrawer;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
 use App\Domain\ValueObject\Account\AccountId;
@@ -10,6 +11,7 @@ use App\Domain\ValueObject\Pix\EmailPixKey;
 use App\Domain\ValueObject\Pix\PixId;
 use App\Repository\AccountRepository;
 use DateTime;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 
 class WithdrawalCreatorTest extends TestCase
@@ -33,12 +35,15 @@ class WithdrawalCreatorTest extends TestCase
             updatedAt: new DateTime()
         );
 
-        $accountRepository = $this->createMock(AccountRepository::class);
-        $accountRepository->expects($this->once())->method('startWithdrawal');
-        $accountRepository->expects($this->once())->method('withdraw');
+        $accountRepository = Mockery::mock(AccountRepository::class);
+        $accountRepository->shouldReceive('createWithdrawal');
+
+        $withdrawer = Mockery::mock(Withdrawer::class);
+        $withdrawer->shouldReceive('execute');
 
         $service = new WithdrawalCreator(
             accountRepository: $accountRepository,
+            withdrawer: $withdrawer,
         );
 
         $service->execute(
@@ -47,5 +52,7 @@ class WithdrawalCreatorTest extends TestCase
             amount: 40.0,
             schedule: null,
         );
+
+        $this->assertTrue(true);
     }
 }

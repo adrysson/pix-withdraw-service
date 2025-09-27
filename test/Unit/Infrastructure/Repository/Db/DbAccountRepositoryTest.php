@@ -18,7 +18,7 @@ use Mockery;
 
 class DbAccountRepositoryTest extends TestCase
 {
-    public function testStartWithdrawalInsertsWithdrawalAndPix(): void
+    public function testcreateWithdrawalInsertsWithdrawalAndPix(): void
     {
         $withdrawal = $this->makeWithdrawal();
 
@@ -31,7 +31,7 @@ class DbAccountRepositoryTest extends TestCase
         $database->shouldReceive('commit')->once();
 
         $repo = new DbAccountRepository($database);
-        $repo->startWithdrawal($withdrawal);
+        $repo->createWithdrawal($withdrawal);
         $this->assertFalse($withdrawal->done());
     }
 

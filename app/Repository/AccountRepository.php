@@ -8,7 +8,7 @@ use Throwable;
 
 interface AccountRepository
 {
-    public function startWithdrawal(Withdrawal $withdrawal);
+    public function createWithdrawal(Withdrawal $withdrawal);
 
     public function withdraw(AccountId $accountId, Withdrawal $withdrawal): void;
 

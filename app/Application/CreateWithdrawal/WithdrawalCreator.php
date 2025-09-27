@@ -7,12 +7,13 @@ use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\ValueObject\Account\AccountId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalSchedule;
 use App\Repository\AccountRepository;
-use Throwable;
+use App\Application\Withdraw\Withdrawer;
 
 class WithdrawalCreator
 {
     public function __construct(
         private AccountRepository $accountRepository,
+        private Withdrawer $withdrawer,
     ) {
     }
 
@@ -29,15 +30,8 @@ class WithdrawalCreator
             schedule: $schedule,
         );
 
-        $this->accountRepository->startWithdrawal($withdrawal);
+        $this->accountRepository->createWithdrawal($withdrawal);
 
-        try {
-            $this->accountRepository->withdraw(
-                accountId: $accountId,
-                withdrawal: $withdrawal,
-            );
-        } catch (Throwable $throwable) {
-            $this->accountRepository->finishWithdrawal($withdrawal, $throwable);
-        }
+        $this->withdrawer->execute($accountId, $withdrawal);
     }
 }

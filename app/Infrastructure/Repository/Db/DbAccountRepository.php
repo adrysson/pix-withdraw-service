@@ -25,7 +25,7 @@ class DbAccountRepository implements AccountRepository
     ) {  
     }
 
-    public function startWithdrawal(Withdrawal $withdrawal): void
+    public function createWithdrawal(Withdrawal $withdrawal): void
     {
         $this->database->beginTransaction();
 
