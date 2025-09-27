@@ -2,25 +2,18 @@
 
 namespace App\Domain\ValueObject;
 
-use InvalidArgumentException;
+use App\Domain\ValueObject;
 
-abstract class StringValueObject
+abstract class StringValueObject extends ValueObject
 {
     public function __construct(
         public readonly string $value,
     ) {
-        if (! $this->isValid()) {
-            throw new InvalidArgumentException('Invalid value');
-        }
+        parent::__construct();
     }
 
     public function __toString(): string
     {
         return $this->value;
-    }
-
-    public function isValid(): bool
-    {
-        return true;
     }
 }

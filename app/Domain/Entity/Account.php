@@ -2,36 +2,30 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\ValueObject\AccountId;
-
+use App\Domain\Collection\WithdrawalCollection;
+use App\Domain\Entity;
+use App\Domain\ValueObject\EntityId;
 use DateTime;
 
-class Account
+class Account extends Entity
 {
-    protected function __construct(
-        public readonly AccountId $id,
+    public function __construct(
+        EntityId $id,
         public readonly string $name,
         private float $balance,
-        public readonly DateTime $createdAt,
-        private DateTime $updatedAt,
+        public readonly WithdrawalCollection $withdrawals,
+        DateTime $createdAt,
+        DateTime $updatedAt,
     ) {
+        parent::__construct(
+            id: $id,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+        );
     }
 
     public function balance(): float
     {
         return $this->balance;
-    }
-
-    public static function create(
-        string $name,
-        float $balance = 0.0,
-    ): self {
-        return new self(
-            id: AccountId::generate(),
-            name: $name,
-            balance: $balance,
-            createdAt: new DateTime(),
-            updatedAt: new DateTime(),
-        );
     }
 }

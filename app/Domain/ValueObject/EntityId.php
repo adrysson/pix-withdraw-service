@@ -4,7 +4,7 @@ namespace App\Domain\ValueObject;
 
 use Ramsey\Uuid\Uuid;
 
-abstract class UuidValueObject extends StringValueObject
+abstract class EntityId extends StringValueObject
 {
     public function isValid(): bool
     {
