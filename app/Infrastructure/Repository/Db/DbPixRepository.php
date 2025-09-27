@@ -11,14 +11,9 @@ class DbPixRepository
 {
     private const PIX_TABLE = 'account_withdraw_pix';
 
-    public function __construct(
-        private Db $database,
-    ) {
-    }
-
-    public function findByWithdrawalId(WithdrawalId $withdrawalId): ?Pix
+    public function findByWithdrawalId(Db $database, WithdrawalId $withdrawalId): ?Pix
     {
-        $row = $this->database->table(self::PIX_TABLE)
+        $row = $database->table(self::PIX_TABLE)
             ->where('account_withdraw_id', $withdrawalId->value)
             ->first();
         if (!$row) {
@@ -27,9 +22,9 @@ class DbPixRepository
         return PixMapper::mapPix($row);
     }
 
-    public function insert(Pix $pix, WithdrawalId $withdrawalId): void
+    public function insert(Db $database, Pix $pix, WithdrawalId $withdrawalId): void
     {
-        $this->database->table(self::PIX_TABLE)
+        $database->table(self::PIX_TABLE)
             ->insert([
                 'id' => $pix->id->value,
                 'account_withdraw_id' => $withdrawalId->value,

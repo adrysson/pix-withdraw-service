@@ -20,16 +20,11 @@ class DbWithdrawalRepository implements WithdrawalRepository
 {
     private const WITHDRAWAL_TABLE = 'account_withdraw';
 
-    private DbAccountRepository $accountRepository;
-    private DbPixRepository $pixRepository;
-
     public function __construct(
         private Db $database,
-        ?DbAccountRepository $accountRepository = null,
-        ?DbPixRepository $pixRepository = null,
+        private DbAccountRepository $accountRepository,
+        private DbPixRepository $pixRepository,
     ) {
-        $this->accountRepository = $accountRepository ?: new DbAccountRepository($this->database);
-        $this->pixRepository = $pixRepository ?: new DbPixRepository($this->database);
     }
 
     public function create(Withdrawal $withdrawal): void
@@ -55,7 +50,11 @@ class DbWithdrawalRepository implements WithdrawalRepository
             $method = $withdrawal->method;
 
             if ($method instanceof Pix) {
-                $this->pixRepository->insert($method, $withdrawal->id);
+                $this->pixRepository->insert(
+                    database: $this->database,
+                    pix: $method,
+                    withdrawalId: $withdrawal->id,
+                );
             }
 
             $this->database->commit();
@@ -71,13 +70,17 @@ class DbWithdrawalRepository implements WithdrawalRepository
 
         try {
             $account = $this->accountRepository->findById(
+                database: $this->database,
                 id: $withdrawal->accountId,
                 lockForUpdate: true,
             );
 
             $account->withdraw($withdrawal);
 
-            $this->accountRepository->update($account);
+            $this->accountRepository->update(
+                database: $this->database,
+                account: $account,
+            );
 
             $this->finish($withdrawal);
 
@@ -133,6 +136,9 @@ class DbWithdrawalRepository implements WithdrawalRepository
 
     private function findPix(string $withdrawalId): Pix
     {
-        return $this->pixRepository->findByWithdrawalId(new WithdrawalId($withdrawalId));
+        return $this->pixRepository->findByWithdrawalId(
+            database: $this->database,
+            withdrawalId: new WithdrawalId($withdrawalId),
+        );
     }
 }

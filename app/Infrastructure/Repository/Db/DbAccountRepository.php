@@ -12,14 +12,9 @@ class DbAccountRepository
 {
     private const ACCOUNT_TABLE = 'account';
 
-    public function __construct(
-        private Db $database,
-    ) {
-    }
-
-    public function findById(AccountId $id, bool $lockForUpdate = false): Account
+    public function findById(Db $database, AccountId $id, bool $lockForUpdate = false): Account
     {
-        $query = $this->database->table(self::ACCOUNT_TABLE)
+        $query = $database->table(self::ACCOUNT_TABLE)
             ->where('id', $id->value);
 
         if ($lockForUpdate) {
@@ -35,9 +30,9 @@ class DbAccountRepository
         return AccountMapper::mapAccount($data);
     }
 
-    public function update(Account $account): void
+    public function update(Db $database, Account $account): void
     {
-        $this->database->table(self::ACCOUNT_TABLE)
+        $database->table(self::ACCOUNT_TABLE)
             ->where('id', $account->id->value)
             ->update([
                 'balance' => $account->balance(),
