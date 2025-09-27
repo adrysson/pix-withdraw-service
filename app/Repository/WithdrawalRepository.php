@@ -8,11 +8,11 @@ use Throwable;
 
 interface WithdrawalRepository
 {
-    public function createWithdrawal(Withdrawal $withdrawal);
+    public function create(Withdrawal $withdrawal): void;
 
     public function withdraw(Withdrawal $withdrawal): void;
 
-    public function finishWithdrawal(Withdrawal $withdrawal, ?Throwable $throwable = null);
+    public function finishWithdrawal(Withdrawal $withdrawal, ?Throwable $throwable = null): void;
 
     public function findPendingWithdrawals(): WithdrawalCollection;
 }

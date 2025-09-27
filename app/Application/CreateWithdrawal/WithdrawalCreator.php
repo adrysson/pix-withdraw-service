@@ -30,7 +30,7 @@ class WithdrawalCreator
             schedule: $schedule,
         );
 
-        $this->withdrawalRepository->createWithdrawal($withdrawal);
+        $this->withdrawalRepository->create($withdrawal);
 
         $this->withdrawer->execute($withdrawal);
     }

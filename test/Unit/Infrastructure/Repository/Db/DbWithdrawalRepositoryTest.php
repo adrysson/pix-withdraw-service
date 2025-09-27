@@ -31,7 +31,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $database->shouldReceive('commit')->once();
 
         $repo = new DbWithdrawalRepository($database);
-        $repo->createWithdrawal($withdrawal);
+        $repo->create($withdrawal);
         $this->assertFalse($withdrawal->done());
     }
 

@@ -30,7 +30,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
     ) {  
     }
 
-    public function createWithdrawal(Withdrawal $withdrawal): void
+    public function create(Withdrawal $withdrawal): void
     {
         $this->database->beginTransaction();
 
@@ -95,7 +95,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
         }
     }
 
-    public function finishWithdrawal(Withdrawal $withdrawal, ?Throwable $throwable = null)
+    public function finishWithdrawal(Withdrawal $withdrawal, ?Throwable $throwable = null): void
     {
         $withdrawal->markAsDone();
 

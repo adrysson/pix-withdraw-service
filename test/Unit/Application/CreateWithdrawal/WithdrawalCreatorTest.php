@@ -36,7 +36,7 @@ class WithdrawalCreatorTest extends TestCase
         );
 
         $withdrawalRepository = Mockery::mock(WithdrawalRepository::class);
-        $withdrawalRepository->shouldReceive('createWithdrawal');
+        $withdrawalRepository->shouldReceive('create');
 
         $withdrawer = Mockery::mock(Withdrawer::class);
         $withdrawer->shouldReceive('execute');
