@@ -9,16 +9,16 @@ use Throwable;
 class Withdrawer
 {
     public function __construct(
-        private WithdrawalRepository $accountRepository,
+        private WithdrawalRepository $withdrawalRepository,
     ) {
     }
 
     public function execute(Withdrawal $withdrawal): void
     {
         try {
-            $this->accountRepository->withdraw($withdrawal);
+            $this->withdrawalRepository->withdraw($withdrawal);
         } catch (Throwable $throwable) {
-            $this->accountRepository->finishWithdrawal($withdrawal, $throwable);
+            $this->withdrawalRepository->finishWithdrawal($withdrawal, $throwable);
         }
     }
 }

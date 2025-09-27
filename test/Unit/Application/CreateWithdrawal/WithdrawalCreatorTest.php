@@ -35,14 +35,14 @@ class WithdrawalCreatorTest extends TestCase
             updatedAt: new DateTime()
         );
 
-        $accountRepository = Mockery::mock(WithdrawalRepository::class);
-        $accountRepository->shouldReceive('createWithdrawal');
+        $withdrawalRepository = Mockery::mock(WithdrawalRepository::class);
+        $withdrawalRepository->shouldReceive('createWithdrawal');
 
         $withdrawer = Mockery::mock(Withdrawer::class);
         $withdrawer->shouldReceive('execute');
 
         $service = new WithdrawalCreator(
-            accountRepository: $accountRepository,
+            withdrawalRepository: $withdrawalRepository,
             withdrawer: $withdrawer,
         );
 

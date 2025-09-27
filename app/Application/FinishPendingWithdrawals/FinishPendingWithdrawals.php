@@ -8,14 +8,14 @@ use App\Application\Withdraw\Withdrawer;
 class FinishPendingWithdrawals
 {
     public function __construct(
-        private WithdrawalRepository $accountRepository,
+        private WithdrawalRepository $withdrawalRepository,
         private Withdrawer $withdrawer,
     ) {
     }
 
     public function execute(): void
     {
-        $pendingWithdrawals = $this->accountRepository->findPendingWithdrawals();
+        $pendingWithdrawals = $this->withdrawalRepository->findPendingWithdrawals();
 
         foreach ($pendingWithdrawals as $withdrawal) {
             $this->withdrawer->execute($withdrawal);

@@ -12,7 +12,7 @@ use App\Application\Withdraw\Withdrawer;
 class WithdrawalCreator
 {
     public function __construct(
-        private WithdrawalRepository $accountRepository,
+        private WithdrawalRepository $withdrawalRepository,
         private Withdrawer $withdrawer,
     ) {
     }
@@ -30,7 +30,7 @@ class WithdrawalCreator
             schedule: $schedule,
         );
 
-        $this->accountRepository->createWithdrawal($withdrawal);
+        $this->withdrawalRepository->createWithdrawal($withdrawal);
 
         $this->withdrawer->execute($withdrawal);
     }

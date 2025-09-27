@@ -43,8 +43,8 @@ class FinishPendingWithdrawalsTest extends TestCase
             $withdrawal2,
         ]);
 
-        $accountRepository = $this->createMock(WithdrawalRepository::class);
-        $accountRepository->expects($this->once())
+        $withdrawalRepository = $this->createMock(WithdrawalRepository::class);
+        $withdrawalRepository->expects($this->once())
             ->method('findPendingWithdrawals')
             ->willReturn($collection);
 
@@ -53,7 +53,7 @@ class FinishPendingWithdrawalsTest extends TestCase
         $withdrawer->expects($this->exactly(2))
             ->method('execute');
 
-        $service = new FinishPendingWithdrawals($accountRepository, $withdrawer);
+        $service = new FinishPendingWithdrawals($withdrawalRepository, $withdrawer);
         $service->execute();
         $this->assertTrue(true);
     }
