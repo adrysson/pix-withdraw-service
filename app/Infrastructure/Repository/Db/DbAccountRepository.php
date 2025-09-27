@@ -17,12 +17,14 @@ class DbAccountRepository
     ) {
     }
 
-    public function findByIdLock(AccountId $id): Account
+    public function findById(AccountId $id, bool $lockForUpdate = false): Account
     {
-        $data = $this->database->table(self::ACCOUNT_TABLE)
-            ->where('id', $id->value)
-            ->lockForUpdate()
-            ->first();
+        $query = $this->database->table(self::ACCOUNT_TABLE)
+            ->where('id', $id->value);
+        if ($lockForUpdate) {
+            $query = $query->lockForUpdate();
+        }
+        $data = $query->first();
 
         if (! $data) {
             throw new AccountNotFoundException($id->value);

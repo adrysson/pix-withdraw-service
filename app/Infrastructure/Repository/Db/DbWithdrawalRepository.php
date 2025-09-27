@@ -8,6 +8,7 @@ use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\Enum\WithdrawalMethodType;
+use App\Domain\ValueObject\Account\AccountId;
 use App\Repository\WithdrawalRepository;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
 use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
@@ -76,7 +77,10 @@ class DbWithdrawalRepository implements WithdrawalRepository
         $this->database->beginTransaction();
         try {
 
-            $account = $this->accountRepository->findByIdLock($withdrawal->accountId);
+            $account = $this->accountRepository->findById(
+                id: $withdrawal->accountId,
+                lockForUpdate: true,
+            );
 
             $account->withdraw($withdrawal);
 

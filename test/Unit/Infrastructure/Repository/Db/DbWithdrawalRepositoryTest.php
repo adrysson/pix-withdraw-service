@@ -68,7 +68,7 @@ class DbWithdrawalRepositoryTest extends TestCase
 
         // Mock DbAccountRepository
         $accountRepository = Mockery::mock(DbAccountRepository::class);
-        $accountRepository->shouldReceive('findByIdLock')->with($accountId)->andReturn($account);
+        $accountRepository->shouldReceive('findById')->with($accountId, true)->andReturn($account);
         $accountRepository->shouldReceive('update')->once();
 
         $repo = new DbWithdrawalRepository($database, $accountRepository);
