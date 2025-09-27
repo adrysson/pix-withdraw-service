@@ -1,41 +1,21 @@
 <?php
 
-namespace Test\Unit\Domain\Entity;
+namespace Test\Unit\Application\WithdrawFunds;
 
-use App\Domain\Entity\Account;
-use App\Domain\ValueObject\EntityId;
+use App\Application\WithdrawFunds\FundsWithdrawer;
 use App\Domain\Collection\WithdrawalCollection;
+use App\Domain\Entity\Account;
 use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
+use App\Domain\ValueObject\EntityId;
 use App\Domain\ValueObject\Pix\EmailPixKey;
+use App\Repository\AccountRepository;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class AccountTest extends TestCase
+class FundsWithdrawerTest extends TestCase
 {
-    public function testCreateAccountWithValidData(): void
-    {
-        $id = EntityId::generate();
-        $withdrawals = new WithdrawalCollection();
-        $createdAt = new DateTime();
-        $updatedAt = new DateTime();
-        $account = new Account(
-            id: $id,
-            name: 'John Doe',
-            balance: 100.0,
-            withdrawals: $withdrawals,
-            createdAt: $createdAt,
-            updatedAt: $updatedAt
-        );
-        $this->assertEquals($id->value, $account->id->value);
-        $this->assertEquals('John Doe', $account->name);
-        $this->assertEquals(100.0, $account->balance());
-        $this->assertSame($withdrawals, $account->withdrawals);
-        $this->assertEquals($createdAt, $account->createdAt);
-        $this->assertEquals($updatedAt, $account->updatedAt());
-    }
-
-    public function testWithdrawDecreasesBalanceAndAddsWithdrawal(): void
+    public function testWithdrawCallsAccountWithdrawAndRepositoryUpdate(): void
     {
         $id = EntityId::generate();
         $withdrawals = new WithdrawalCollection();
@@ -64,10 +44,16 @@ class AccountTest extends TestCase
             updatedAt: new DateTime()
         );
 
-        $account->withdraw($withdrawal);
+        $repository = $this->createMock(AccountRepository::class);
+        $repository->expects($this->once())->method('update');
+
+        $service = new FundsWithdrawer($repository);
+
+        $service->withdraw($account, $withdrawal);
 
         $this->assertEquals(60.0, $account->balance());
         $this->assertCount(1, $account->withdrawals->toArray());
         $this->assertSame($withdrawal, $account->withdrawals->toArray()[0]);
+
     }
 }
