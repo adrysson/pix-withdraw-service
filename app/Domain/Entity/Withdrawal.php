@@ -11,6 +11,7 @@ class Withdrawal extends Entity
 {
     public function __construct(
         EntityId $id,
+        public readonly Account $account,
         public readonly WithdrawalMethod $method,
         public readonly float $amount,
         public readonly ?WithdrawalSchedule $schedule,
@@ -25,17 +26,26 @@ class Withdrawal extends Entity
     }
 
     public static function create(
+        Account $account,
         WithdrawalMethod $method,
         float $amount,
-        ?DateTime $schedule, 
+        ?WithdrawalSchedule $schedule, 
     ): self {
         return new self(
             id: EntityId::generate(),
+            account: $account,
             method: $method,
             amount: $amount,
             schedule: $schedule,
             createdAt: new DateTime(),
             updatedAt: new DateTime(),
         );
+    }
+
+    public function withdraw(Account $account): void
+    {
+        if (! $this->schedule?->isFuture()) {
+            $account->subtractBalance($this->amount);
+        }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Collection\WithdrawalCollection;
 use App\Domain\Entity;
+use App\Domain\Exception\InsufficientBalanceException;
 use App\Domain\ValueObject\EntityId;
 use DateTime;
 
@@ -13,7 +13,6 @@ class Account extends Entity
         EntityId $id,
         public readonly string $name,
         private float $balance,
-        public readonly WithdrawalCollection $withdrawals,
         DateTime $createdAt,
         DateTime $updatedAt,
     ) {
@@ -29,11 +28,12 @@ class Account extends Entity
         return $this->balance;
     }
 
-    public function withdraw(Withdrawal $withdrawal): void
+    public function subtractBalance(float $amount): void
     {
-        if (! $withdrawal->schedule?->isFuture()) {
-            $this->balance -= $withdrawal->amount;
+        if ($amount > $this->balance) {
+            throw new InsufficientBalanceException();
         }
-        $this->withdrawals->add($withdrawal);
+
+        $this->balance -= $amount;
     }
 }

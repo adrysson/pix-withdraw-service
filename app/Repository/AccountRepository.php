@@ -8,6 +8,4 @@ use App\Domain\ValueObject\EntityId;
 interface AccountRepository
 {
     public function findById(EntityId $id): Account;
-
-    public function update(Account $account): void;
 }
