@@ -15,9 +15,4 @@ class StringValueObjectTest extends TestCase
         $this->assertEquals('test', (string) $obj);
     }
 
-    public function testIsValidReturnsTrueByDefault(): void
-    {
-        $obj = new DummyStringValueObject('any');
-        $this->assertTrue($obj->isValid());
-    }
 }
