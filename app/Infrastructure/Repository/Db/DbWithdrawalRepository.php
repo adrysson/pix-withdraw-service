@@ -4,13 +4,12 @@ namespace App\Infrastructure\Repository\Db;
 
 use App\Domain\Collection\WithdrawalCollection;
 use App\Infrastructure\Repository\Db\DbAccountRepository;
-use App\Domain\Entity\Pix;
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Entity\WithdrawalMethod;
 use App\Domain\Enum\WithdrawalMethodType;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use App\Domain\Repository\WithdrawalRepository;
-use App\Infrastructure\Repository\Db\DbPixRepository;
+use App\Infrastructure\Repository\Db\Factory\WithdrawalMethodRepositoryFactory;
 use App\Infrastructure\Repository\Db\Mapper\WithdrawalMapper;
 use Hyperf\DbConnection\Db;
 use DateTime;
@@ -23,7 +22,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
     public function __construct(
         private Db $database,
         private DbAccountRepository $accountRepository,
-        private DbPixRepository $pixRepository,
+        private WithdrawalMethodRepositoryFactory $withdrawalMethodRepositoryFactory,
     ) {
     }
 
@@ -47,14 +46,12 @@ class DbWithdrawalRepository implements WithdrawalRepository
                     'updated_at' => $withdrawal->updatedAt()->format('Y-m-d H:i:s'),
                 ]);
 
-            $method = $withdrawal->method;
+            $methodRepository = $this->withdrawalMethodRepositoryFactory->make($withdrawal->method->methodType());
 
-            if ($method instanceof Pix) {
-                $this->pixRepository->insert(
-                    database: $this->database,
-                    pix: $method,
-                );
-            }
+            $methodRepository->insert(
+                database: $this->database,
+                method: $withdrawal->method,
+            );
 
             $this->database->commit();
         } catch (Throwable $throwable) {
@@ -128,16 +125,15 @@ class DbWithdrawalRepository implements WithdrawalRepository
 
     private function findWithdrawalMethod(object $row): WithdrawalMethod
     {
-        return match ($row->method) {
-            WithdrawalMethodType::PIX->value => $this->findPix($row->id),
-        };
-    }
+        $methodType = WithdrawalMethodType::from($row->method);
 
-    private function findPix(string $withdrawalId): Pix
-    {
-        return $this->pixRepository->findByWithdrawalId(
+        $methodRepository = $this->withdrawalMethodRepositoryFactory->make($methodType);
+
+        $withdrawalId = new WithdrawalId($row->id);
+
+        return $methodRepository->findByWithdrawalId(
             database: $this->database,
-            withdrawalId: new WithdrawalId($withdrawalId),
+            withdrawalId: $withdrawalId,
         );
     }
 }

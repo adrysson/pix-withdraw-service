@@ -3,11 +3,13 @@
 namespace App\Infrastructure\Repository\Db;
 
 use App\Domain\Entity\Pix;
+use App\Domain\Entity\WithdrawalMethod;
+use App\Domain\Repository\WithdrawalMethodRepository;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use Hyperf\DbConnection\Db;
 use App\Infrastructure\Repository\Db\Mapper\PixMapper;
 
-class DbPixRepository
+class DbPixRepository implements WithdrawalMethodRepository
 {
     private const PIX_TABLE = 'account_withdraw_pix';
 
@@ -22,7 +24,8 @@ class DbPixRepository
         return PixMapper::mapPix($row);
     }
 
-    public function insert(Db $database, Pix $pix): void
+    /** @param Pix $pix */
+    public function insert(Db $database, WithdrawalMethod $pix): void
     {
         $database->table(self::PIX_TABLE)
             ->insert([
