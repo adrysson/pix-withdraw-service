@@ -6,17 +6,15 @@ use App\Domain\Enum\WithdrawalMethodType;
 use App\Infrastructure\Repository\Db\DbPixRepository;
 use App\Infrastructure\Repository\Db\Factory\WithdrawalMethodRepositoryFactory;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 class WithdrawalMethodRepositoryFactoryTest extends TestCase
 {
     public function testMakeReturnsPixRepositoryForPixMethodType(): void
     {
-        $pixRepository = Mockery::mock(DbPixRepository::class);
-        $factory = new WithdrawalMethodRepositoryFactory($pixRepository);
+        $factory = new WithdrawalMethodRepositoryFactory();
 
         $result = $factory->make(WithdrawalMethodType::PIX);
 
-        $this->assertEquals($pixRepository, $result);
+        $this->assertInstanceOf(DbPixRepository::class, $result);
     }
 }
