@@ -46,7 +46,10 @@ class DbWithdrawalRepository implements WithdrawalRepository
                     'updated_at' => $withdrawal->updatedAt()->format('Y-m-d H:i:s'),
                 ]);
 
-            $methodRepository = $this->withdrawalMethodRepositoryFactory->make($withdrawal->method->methodType());
+            $methodRepository = $this->withdrawalMethodRepositoryFactory->make(
+                database: $this->database,
+                methodType: $withdrawal->method->methodType(),
+            );
 
             $methodRepository->insert(
                 database: $this->database,
@@ -127,7 +130,10 @@ class DbWithdrawalRepository implements WithdrawalRepository
     {
         $methodType = WithdrawalMethodType::from($row->method);
 
-        $methodRepository = $this->withdrawalMethodRepositoryFactory->make($methodType);
+        $methodRepository = $this->withdrawalMethodRepositoryFactory->make(
+            database: $this->database,
+            methodType: $methodType,
+        );
 
         $withdrawalId = new WithdrawalId($row->id);
 
