@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace App\Presentation\Exception\Handler;
 
 use App\Presentation\Exception\Enum\ErrorCodeEnum;
-use App\Presentation\Exception\Resource\ErrorResource;
-use DomainException;
-use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\ExceptionHandler\ExceptionHandler;
+use App\Presentation\Resource\ErrorResource;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Validation\ValidationException;
 use Hyperf\Validation\ValidationExceptionHandler as HyperfValidationExceptionHandler;
-use Psr\Http\Message\ResponseInterface;
-use Swoole\Http\Status;
 use Swow\Psr7\Message\ResponsePlusInterface;
 use Throwable;
 

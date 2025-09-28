@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Presentation\Exception\Resource;
+namespace App\Presentation\Resource;
 
 use App\Presentation\Exception\Enum\ErrorCodeEnum;
 

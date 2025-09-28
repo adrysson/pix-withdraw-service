@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Presentation\Exception\Handler;
 
 use App\Presentation\Exception\Enum\ErrorCodeEnum;
-use App\Presentation\Exception\Resource\ErrorResource;
+use App\Presentation\Resource\ErrorResource;
 use DomainException;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
