@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Job;
+namespace App\Infrastructure\Job\Cron;
 
 use App\Domain\Repository\WithdrawalRepository;
 use App\Domain\Service\AsyncWithdrawDispatcher;

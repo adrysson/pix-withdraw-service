@@ -6,10 +6,9 @@ namespace App\Infrastructure\Dispatcher;
 
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Service\AsyncWithdrawDispatcher;
-use App\Job\AsyncWithdrawConsumerJob;
+use App\Infrastructure\Job\Queue\AsyncWithdrawConsumerJob;
 use Hyperf\AsyncQueue\Driver\DriverFactory;
 use Hyperf\AsyncQueue\Driver\DriverInterface;
-use Hyperf\Di\Annotation\Inject;
 
 class RedisQueueAsyncWithdrawDispatcher implements AsyncWithdrawDispatcher
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Job\FinishPendingWithdrawsJob;
+use App\Infrastructure\Job\Cron\FinishPendingWithdrawsJob;
 use Hyperf\Crontab\Crontab;
 
 return [
