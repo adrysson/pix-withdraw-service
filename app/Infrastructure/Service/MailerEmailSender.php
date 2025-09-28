@@ -3,7 +3,6 @@
 namespace App\Infrastructure\Service;
 
 use App\Domain\Service\EmailSender;
-use App\Domain\Service\EmailSenderInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mime\Email;

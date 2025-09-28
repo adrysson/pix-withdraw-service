@@ -2,18 +2,27 @@
 
 namespace App\Infrastructure\Service;
 
+use Hyperf\Contract\ConfigInterface;
+
 class MailerEmailSenderFactory
 {
+    public function __construct(
+        private ConfigInterface $config,
+    ) {  
+    }
+
     public function __invoke(): MailerEmailSender
     {
-        $host = 'mailhog';
-        $port = 1025;
-        $defaultFrom = 'no-reply@meusistema.local';
+        $config = $this->config->get('mail');
+
+        $default = $config['default'];
+
+        $mailer = $config['mailers'][$default];
 
         return new MailerEmailSender(
-            host: $host,
-            port: $port,
-            defaultFrom: $defaultFrom,
+            host: $mailer['host'],
+            port: $mailer['port'],
+            defaultFrom: $config['from']['address'],
         );
     }
 }
