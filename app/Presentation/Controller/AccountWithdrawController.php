@@ -7,15 +7,17 @@ use App\Application\CreateWithdrawal\CreateWithdrawHandler;
 use App\Presentation\Request\AccountWithdrawRequest;
 use App\Presentation\Resource\WithdrawResource;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Contract\ResponseInterface as ContractResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * @Controller(prefix="/account")
  */
-class AccountWithdrawController extends AbstractController
+class AccountWithdrawController
 {
     public function __construct(
         protected CreateWithdrawHandler $createWithdrawHandler,
+        protected ContractResponseInterface $response,
     ) {  
     }
 
