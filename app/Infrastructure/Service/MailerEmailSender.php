@@ -11,13 +11,15 @@ use Symfony\Component\Mime\Email;
 class MailerEmailSender implements EmailSender
 {
     private Mailer $mailer;
-    private string $defaultFrom;
 
-    public function __construct(string $host = 'mailhog', int $port = 1025, string $defaultFrom = 'no-reply@meusistema.local')
+    public function __construct(
+        string $host,
+        int $port,
+        private string $defaultFrom,
+    )
     {
         $transport = new EsmtpTransport($host, $port);
         $this->mailer = new Mailer($transport);
-        $this->defaultFrom = $defaultFrom;
     }
 
     public function send(string $to, string $subject, string $body, ?string $from = null): void
