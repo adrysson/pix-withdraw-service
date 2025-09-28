@@ -22,10 +22,11 @@ class Withdrawer
             $this->withdrawalRepository->withdraw($withdrawal);
         } catch (Throwable $throwable) {
             $this->withdrawalRepository->finish($withdrawal, $throwable);
-        }
-
-        foreach ($withdrawal->domainEvents()->all() as $domainEvent) {
-            $this->eventDispatcher->dispatch($domainEvent);
+            throw $throwable;
+        } finally {
+            foreach ($withdrawal->domainEvents()->all() as $domainEvent) {
+                $this->eventDispatcher->dispatch($domainEvent);
+            }
         }
     }
 }
