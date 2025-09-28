@@ -17,6 +17,7 @@ class WithdrawResource implements Arrayable
         return [
             'withdrawal_id' => $this->withdrawal->id->value,
             'amount' => $this->withdrawal->amount,
+            'schedule' => $this->withdrawal->schedule?->value->format('d/m/Y H:i'),
         ];
     }
 }
