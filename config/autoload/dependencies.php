@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Domain\Repository\WithdrawalRepository;
 use App\Domain\Service\AsyncWithdrawDispatcher;
 use App\Domain\Service\EmailSender;
-use App\Infrastructure\Dispatcher\RedisQueueAsyncWithdrawDispatcher;
+use App\Infrastructure\Service\RedisQueueAsyncWithdrawDispatcher;
 use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
 use App\Infrastructure\Service\MailerEmailSenderFactory;
 use Hyperf\Event\EventDispatcher;

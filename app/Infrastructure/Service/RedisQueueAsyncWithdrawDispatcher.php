@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Dispatcher;
+namespace App\Infrastructure\Service;
 
 use App\Domain\Entity\Withdrawal;
 use App\Domain\Service\AsyncWithdrawDispatcher;
