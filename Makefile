@@ -12,3 +12,6 @@ up:
 
 migrate-seed:
 	$(DOCKER_COMPOSE) exec app php bin/hyperf.php migrate:fresh --seed
+
+tests:
+	$(DOCKER_COMPOSE) exec app ./vendor/bin/phpunit
