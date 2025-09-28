@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Exception\Handler\DomainExceptionHandler;
-use Hyperf\Validation\ValidationExceptionHandler;
+use App\Infrastructure\Exception\Handler\ValidationExceptionHandler;
 
 /**
  * This file is part of Hyperf.
@@ -16,10 +16,10 @@ use Hyperf\Validation\ValidationExceptionHandler;
 return [
     'handler' => [
         'http' => [
-            App\Infrastructure\Exception\Handler\AppExceptionHandler::class,
-            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
-            ValidationExceptionHandler::class,
             DomainExceptionHandler::class,
+            ValidationExceptionHandler::class,
+            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
+            App\Infrastructure\Exception\Handler\AppExceptionHandler::class,
         ],
     ],
 ];
