@@ -8,15 +8,15 @@ use App\Domain\ValueObject\Pix\PixId;
 use App\Domain\ValueObject\Withdrawal\WithdrawalId;
 use DateTime;
 
-class PixFactory
+class PixFactory implements WithdrawalMethodFactoryInterface
 {
-    public static function make(array $pixData): Pix
+    public static function make(array $requestData): Pix
     {
-        $type = PixKeyType::from($pixData['type']);
+        $type = PixKeyType::from($requestData['type']);
 
         $pixKey = PixKeyFactory::make(
             type: $type,
-            key: $pixData['key'],
+            key: $requestData['key'],
         );
 
         $now = new DateTime();

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Presentation\Request;
 
-use App\Domain\Enum\WithdrawalMethodType;
-use App\Domain\Enum\PixKeyType;
 use DateTime;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Validation\Request\FormRequest;
 
 class AccountWithdrawRequest extends FormRequest
@@ -24,24 +24,14 @@ class AccountWithdrawRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $method = $this->input('method');
+        $config = ApplicationContext::getContainer()->get(ConfigInterface::class);
+        $methodsConfig = $config->get('withdrawal-methods');
+        $rules = [
             'method' => [
                 'required',
                 'string',
-                'in:' . implode(',', array_map(fn($e) => $e->value, WithdrawalMethodType::cases())),
-            ],
-            'pix' => [
-                'required_if:method,' . WithdrawalMethodType::PIX->value,
-                'array',
-            ],
-            'pix.type' => [
-                'required_if:method,' . WithdrawalMethodType::PIX->value,
-                'string',
-                'in:' . implode(',', array_map(fn($e) => $e->value, PixKeyType::cases())),
-            ],
-            'pix.key' => [
-                'required_if:method,' . WithdrawalMethodType::PIX->value,
-                'string',
+                'in:' . implode(',', array_keys($methodsConfig)),
             ],
             'amount' => [
                 'required',
@@ -52,6 +42,10 @@ class AccountWithdrawRequest extends FormRequest
                 'date_format:Y-m-d H:i',
             ],
         ];
+        if ($method && isset($methodsConfig[$method]['validation'])) {
+            $rules = array_merge($rules, $methodsConfig[$method]['validation']);
+        }
+        return $rules;
     }
 
     public function accountId(): ?string
