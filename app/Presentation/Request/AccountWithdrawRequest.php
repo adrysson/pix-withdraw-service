@@ -27,6 +27,7 @@ class AccountWithdrawRequest extends FormRequest
             'method' => [
                 'required',
                 'string',
+                'in:' . implode(',', array_map(fn($e) => $e->value, WithdrawalMethodType::cases())),
             ],
             'pix' => [
                 'required_if:method,' . WithdrawalMethodType::PIX->value,
