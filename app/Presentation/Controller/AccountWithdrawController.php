@@ -5,10 +5,10 @@ namespace App\Presentation\Controller;
 use App\Application\CreateWithdrawal\CreateWithdrawCommand;
 use App\Application\CreateWithdrawal\CreateWithdrawHandler;
 use App\Presentation\Request\AccountWithdrawRequest;
+use App\Presentation\Resource\WithdrawResource;
 use Hyperf\HttpServer\Annotation\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface as HyperfResponseInterface;
-use Throwable;
 
 /**
  * @Controller(prefix="/account")
@@ -30,12 +30,10 @@ class AccountWithdrawController
             schedule: $request->schedule(),
         );
 
-        try {
-            $this->createWithdrawHandler->handle($command);
-        } catch (Throwable $throwable) {
-            return $response->json(['error' => $throwable->getMessage()]);
-        }
+        $withdrawal = $this->createWithdrawHandler->handle($command);
 
-        return $response->json(['success' => true]);
+        $resource = new WithdrawResource($withdrawal);
+
+        return $response->json($resource);
     }
 }
