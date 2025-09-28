@@ -2,11 +2,12 @@
 
 namespace App\Infrastructure\Repository\Db\Factory;
 
-
 use App\Domain\Enum\WithdrawalMethodType;
 use App\Domain\Repository\WithdrawalMethodRepository;
-use App\Infrastructure\Repository\Db\DbPixRepository;
 use Hyperf\DbConnection\Db;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\ConfigInterface;
+use InvalidArgumentException;
 
 class WithdrawalMethodRepositoryFactory
 {
@@ -14,9 +15,14 @@ class WithdrawalMethodRepositoryFactory
         Db $database,
         WithdrawalMethodType $methodType,
     ): WithdrawalMethodRepository {
-        return match ($methodType) {
-            WithdrawalMethodType::PIX => new DbPixRepository($database),
-            default => throw new \InvalidArgumentException("Método de saque inválido: {$methodType->value}"),
-        };
+        $config = ApplicationContext::getContainer()->get(ConfigInterface::class);
+        $methodsConfig = $config->get('withdrawal-methods');
+        $methodConfig = $methodsConfig[$methodType->value];
+        /** @var WithdrawalMethodRepository */
+        $repositoryClass = $methodConfig['persistence']['repository'];
+        if (! $repositoryClass) {
+            throw new InvalidArgumentException("Método de saque inválido ou repositório não configurado: {$methodType->value}");
+        }
+        return new $repositoryClass($database);
     }
 }
