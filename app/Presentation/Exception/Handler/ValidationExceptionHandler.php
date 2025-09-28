@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Exception\Handler;
+namespace App\Presentation\Exception\Handler;
 
-use App\Infrastructure\Exception\Enum\ErrorCodeEnum;
-use App\Infrastructure\Exception\Resource\ErrorResource;
+use App\Presentation\Exception\Enum\ErrorCodeEnum;
+use App\Presentation\Exception\Resource\ErrorResource;
 use DomainException;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;

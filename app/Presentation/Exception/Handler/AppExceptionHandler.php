@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Infrastructure\Exception\Handler;
+namespace App\Presentation\Exception\Handler;
 
-use App\Infrastructure\Exception\Enum\ErrorCodeEnum;
-use App\Infrastructure\Exception\Resource\ErrorResource;
+use App\Presentation\Exception\Enum\ErrorCodeEnum;
+use App\Presentation\Exception\Resource\ErrorResource;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;

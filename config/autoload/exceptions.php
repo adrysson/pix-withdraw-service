@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Infrastructure\Exception\Handler\DomainExceptionHandler;
-use App\Infrastructure\Exception\Handler\ValidationExceptionHandler;
+use App\Presentation\Exception\Handler\DomainExceptionHandler;
+use App\Presentation\Exception\Handler\ValidationExceptionHandler;
 
 /**
  * This file is part of Hyperf.
@@ -19,7 +19,7 @@ return [
             DomainExceptionHandler::class,
             ValidationExceptionHandler::class,
             Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
-            App\Infrastructure\Exception\Handler\AppExceptionHandler::class,
+            App\Presentation\Exception\Handler\AppExceptionHandler::class,
         ],
     ],
 ];

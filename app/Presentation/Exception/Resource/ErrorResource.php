@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Infrastructure\Exception\Resource;
+namespace App\Presentation\Exception\Resource;
 
-use App\Infrastructure\Exception\Enum\ErrorCodeEnum;
+use App\Presentation\Exception\Enum\ErrorCodeEnum;
 
 class ErrorResource
 {
