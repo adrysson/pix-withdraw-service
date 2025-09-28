@@ -116,23 +116,47 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 
 ---
 
+## ⚙️ Pré-requisitos
+
+Para rodar o projeto, é necessário ter instalado:
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/) (pode ser o comando `docker compose` ou `docker-compose`, veja observação abaixo)
+- Make (opcional, apenas para facilitar comandos no desenvolvimento)
+
+> **Observação:**
+> O projeto utiliza o comando `docker compose` por padrão. Caso sua máquina utilize `docker-compose` (com hífen), basta sobrescrever a variável ao rodar os comandos do Makefile, por exemplo:
+> ```bash
+> make up DOCKER_COMPOSE="docker-compose"
+> ```
+> Ou altere a variável `DOCKER_COMPOSE` no início do `Makefile`.
+
+Se não quiser usar o Makefile, todos os comandos podem ser executados manualmente (veja exemplos abaixo).
+
 ## 🚀 Como rodar
 ---
 
+### Usando Makefile (recomendado)
+
 1. **Clonar repositório:**
-	 ```bash
-	 git clone https://github.com/seu-user/pix-withdraw-service.git
-	 cd pix-withdraw-service
-	 ```
-
-2. **Subir ambiente com Docker Compose:**
-	 ```bash
-	 docker-compose up -d
-	 ```
-
-3. **Criar tabelas no MySQL e popular o banco com dados de exemplo:**
 	```bash
-	docker compose exec app php bin/hyperf.php migrate --seed
+	git clone git@github.com:adrysson/pix-withdraw-service.git
+	cd pix-withdraw-service
+	```
+
+2. **Criar .env e instalar dependências:**
+	```bash
+	make install
+	```
+
+3. **Subir ambiente com Docker Compose:**
+	```bash
+	make up
+	```
+
+4. **Criar tabelas no MySQL e popular o banco com dados de exemplo:**
+	```bash
+	make migrate-seed
 	```
 
 	> ⚠️ Uma conta de teste é criada automaticamente pela seed:
@@ -141,25 +165,77 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 	>
 	> Use este ID para testar os endpoints de saque.
 
-4. **Acessar serviço:**
+5. **Acessar serviço:**
+	- API: http://localhost:9501
+	- Mailhog: http://localhost:8025
 
-	   - API: http://localhost:9501
-	   - Mailhog: http://localhost:8025
+	**Exemplo de requisição de saque via curl:**
+	```bash
+	curl --location 'http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw' \
+	--header 'Content-Type: application/json' \
+	--data-raw '{
+		 "method": "PIX",
+		 "pix": {
+			  "type": "email",
+			  "key": "teste@email.com"
+		 },
+		 "amount": 10,
+		 "schedule": null
+	}'
+	```
 
-	   **Exemplo de requisição de saque via curl:**
-	   ```bash
-	   curl --location 'http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw' \
-	   --header 'Content-Type: application/json' \
-	   --data-raw '{
-		   "method": "PIX",
-		   "pix": {
-			   "type": "email",
-			   "key": "teste@email.com"
-		   },
-		   "amount": 10,
-		   "schedule": null
-	   }'
-	   ```
+---
+
+### Sem Makefile (comandos manuais)
+
+1. **Clonar repositório:**
+	```bash
+	git clone git@github.com:adrysson/pix-withdraw-service.git
+	cd pix-withdraw-service
+	```
+
+2. **Criar .env:**
+	```bash
+	cp .env.example .env
+	```
+
+3. **Instalar dependências:**
+	```bash
+	docker run -v ${PWD}:/opt/www -p 9501:9501 -w /opt/www --rm hyperf/hyperf:8.3-alpine-v3.22-swoole composer install
+	```
+
+4. **Subir ambiente:**
+	```bash
+	docker compose up -d
+	# ou, se necessário:
+	# docker-compose up -d
+	```
+
+5. **Criar tabelas e popular banco:**
+	```bash
+	docker compose exec app php bin/hyperf.php migrate:fresh --seed
+	# ou, se necessário:
+	# docker-compose exec app php bin/hyperf.php migrate:fresh --seed
+	```
+
+6. **Acessar serviço:**
+	- API: http://localhost:9501
+	- Mailhog: http://localhost:8025
+
+	**Exemplo de requisição de saque via curl:**
+	```bash
+	curl --location 'http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw' \
+	--header 'Content-Type: application/json' \
+	--data-raw '{
+		 "method": "PIX",
+		 "pix": {
+			  "type": "email",
+			  "key": "teste@email.com"
+		 },
+		 "amount": 10,
+		 "schedule": null
+	}'
+	```
 
 ---
 
