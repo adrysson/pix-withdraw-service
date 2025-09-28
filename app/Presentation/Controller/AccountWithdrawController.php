@@ -9,6 +9,7 @@ use App\Presentation\Resource\WithdrawResource;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Contract\ResponseInterface as ContractResponseInterface;
 use Psr\Http\Message\ResponseInterface;
+use Swoole\Http\Status;
 
 /**
  * @Controller(prefix="/account")
@@ -35,6 +36,6 @@ class AccountWithdrawController
 
         $resource = new WithdrawResource($withdrawal);
 
-        return $this->response->json($resource);
+        return $this->response->json($resource)->withStatus(Status::CREATED);
     }
 }
