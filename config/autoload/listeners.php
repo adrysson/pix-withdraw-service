@@ -1,6 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
+use App\Infrastructure\Listener\SendEmailListener;
+
 /**
  * This file is part of Hyperf.
  *
@@ -10,6 +13,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
+    SendEmailListener::class,
     Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler::class,
     Hyperf\Command\Listener\FailToHandleListener::class,
 ];
