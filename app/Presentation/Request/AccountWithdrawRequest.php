@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presentation\Request;
 
 use App\Domain\Enum\WithdrawalMethodType;
+use DateTime;
 use Hyperf\Validation\Request\FormRequest;
 
 class AccountWithdrawRequest extends FormRequest
@@ -48,5 +49,34 @@ class AccountWithdrawRequest extends FormRequest
                 'date_format:Y-m-d H:i',
             ],
         ];
+    }
+
+    public function accountId(): ?string
+    {
+        return $this->route('accountId');
+    }
+
+    public function methodType(): string
+    {
+        return $this->input('method');
+    }
+
+    public function method(): array
+    {
+        return $this->input(strtolower($this->methodType()));
+    }
+
+    public function amount(): float
+    {
+        return (float) $this->input('amount');
+    }
+
+    public function schedule(): ?DateTime
+    {
+        $schedule = $this->input('schedule');
+        if ($schedule) {
+            return new DateTime($schedule);
+        }
+        return null;
     }
 }
