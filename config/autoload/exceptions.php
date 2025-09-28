@@ -17,7 +17,7 @@ return [
         'http' => [
             ValidationExceptionHandler::class,
             Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
-            App\Exception\Handler\AppExceptionHandler::class,
+            App\Infrastructure\Exception\Handler\AppExceptionHandler::class,
         ],
     ],
 ];
