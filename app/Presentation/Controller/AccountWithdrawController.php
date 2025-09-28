@@ -8,19 +8,18 @@ use App\Presentation\Request\AccountWithdrawRequest;
 use App\Presentation\Resource\WithdrawResource;
 use Hyperf\HttpServer\Annotation\Controller;
 use Psr\Http\Message\ResponseInterface;
-use Hyperf\HttpServer\Contract\ResponseInterface as HyperfResponseInterface;
 
 /**
  * @Controller(prefix="/account")
  */
-class AccountWithdrawController
+class AccountWithdrawController extends AbstractController
 {
     public function __construct(
         protected CreateWithdrawHandler $createWithdrawHandler,
     ) {  
     }
 
-    public function withdraw(AccountWithdrawRequest $request, HyperfResponseInterface $response): ResponseInterface
+    public function withdraw(AccountWithdrawRequest $request): ResponseInterface
     {
         $command = new CreateWithdrawCommand(
             accountId: $request->accountId(),
@@ -34,6 +33,6 @@ class AccountWithdrawController
 
         $resource = new WithdrawResource($withdrawal);
 
-        return $response->json($resource);
+        return $this->response->json($resource);
     }
 }

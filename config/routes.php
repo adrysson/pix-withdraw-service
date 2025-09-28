@@ -13,7 +13,7 @@ declare(strict_types=1);
 use App\Presentation\Controller\AccountWithdrawController;
 use Hyperf\HttpServer\Router\Router;
 
-Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
+Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Presentation\Controller\IndexController@index');
 
 Router::get('/favicon.ico', function () {
     return '';
