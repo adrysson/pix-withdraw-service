@@ -119,7 +119,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $database->shouldReceive('where')->with('done', false)->andReturnSelf();
         $database->shouldReceive('where')->with('scheduled', true)->andReturnSelf();
         $database->shouldReceive('whereNotNull')->with('scheduled_for')->andReturnSelf();
-        $database->shouldReceive('where')->with('scheduled_for', '<', Mockery::type('string'))->andReturnSelf();
+        $database->shouldReceive('where')->with('scheduled_for', '<=', Mockery::type('string'))->andReturnSelf();
         $database->shouldReceive('get')->andReturn($rows);
 
         $pixRow = (object) [
