@@ -1,0 +1,163 @@
+<?php
+
+namespace Test\Unit\Infrastructure\Repository\Db;
+
+use App\Domain\Collection\WithdrawalCollection;
+use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
+use App\Infrastructure\Repository\Db\DbAccountRepository;
+use App\Domain\Entity\Pix;
+use App\Infrastructure\Repository\Db\Mapper\PixMapper;
+use App\Domain\Entity\Withdrawal;
+use App\Domain\Repository\WithdrawalMethodRepository;
+use App\Infrastructure\Repository\Db\Factory\WithdrawalMethodRepositoryFactory;
+use Hyperf\DbConnection\Db;
+use PHPUnit\Framework\TestCase;
+use DateTime;
+use Mockery;
+use Test\Stubs\Domain\Entity\AccountStub;
+use Test\Stubs\Domain\Entity\WithdrawalStub;
+
+class DbWithdrawalRepositoryTest extends TestCase
+{
+    public function testcreateWithdrawalInsertsWithdrawalAndPix(): void
+    {
+        $withdrawal = WithdrawalStub::random();
+
+        $database = Mockery::mock(Db::class);
+        $database->shouldReceive('beginTransaction')->once();
+        $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
+        $database->shouldReceive('insert')->once();
+        $database->shouldReceive('table')->with('account_withdraw_pix')->andReturnSelf();
+        $database->shouldReceive('insert')->once();
+        $database->shouldReceive('commit')->once();
+
+
+        $accountRepository = Mockery::mock(DbAccountRepository::class);
+
+        $pixRepository = Mockery::mock(WithdrawalMethodRepository::class);
+        $pixRepository->shouldReceive('insert')->once();
+
+        $factory = Mockery::mock(WithdrawalMethodRepositoryFactory::class);
+        $factory->shouldReceive('make')->andReturn($pixRepository);
+
+        $repo = new DbWithdrawalRepository($database, $accountRepository, $factory);
+
+        $repo->create($withdrawal);
+        $this->assertFalse($withdrawal->done());
+    }
+
+    public function testWithdrawUpdatesAccountAndFinishesWithdrawal(): void
+    {
+        $withdrawal = WithdrawalStub::random(
+            amount: 70.0,
+        );
+
+        $account = AccountStub::random(
+            balance: 90.0,
+        );
+
+
+        $database = Mockery::mock(Db::class);
+        $database->shouldReceive('beginTransaction')->once();
+        $database->shouldReceive('commit')->once();
+        $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
+        $database->shouldReceive('where')->with('id', $withdrawal->id->value)->andReturnSelf();
+        $database->shouldReceive('update')->once();
+
+        $accountRepository = Mockery::mock(DbAccountRepository::class);
+        $accountRepository->shouldReceive('findById')->with($database, $withdrawal->accountId, true)->andReturn($account);
+        $accountRepository->shouldReceive('update')->once();
+
+        $factory = Mockery::mock(WithdrawalMethodRepositoryFactory::class);
+
+        $repo = new DbWithdrawalRepository($database, $accountRepository, $factory);
+
+        $repo->withdraw($withdrawal);
+
+        $this->assertTrue($withdrawal->done());
+    }
+
+    public function testFinishWithdrawalUpdatesWithdrawal(): void
+    {
+        $withdrawal = WithdrawalStub::random();
+
+        $database = Mockery::mock(Db::class);
+        $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
+        $database->shouldReceive('where')->with('id', $withdrawal->id->value)->andReturnSelf();
+        $database->shouldReceive('update')->once();
+
+        $accountRepository = Mockery::mock(DbAccountRepository::class);
+
+        $factory = Mockery::mock(WithdrawalMethodRepositoryFactory::class);
+
+        $repo = new DbWithdrawalRepository($database, $accountRepository, $factory);
+
+        $repo->finish($withdrawal, null);
+        $this->assertTrue($withdrawal->done());
+    }
+
+    public function testFindPendingWithdrawalsReturnsCollection(): void
+    {
+        $now = new DateTime();
+        $past = (clone $now)->modify('-1 day')->format('Y-m-d H:i:s');
+        $rows = [
+            (object) [
+                'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+                'account_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+                'method' => 'pix',
+                'amount' => 100.0,
+                'scheduled' => true,
+                'scheduled_for' => $past,
+                'done' => false,
+                'created_at' => $past,
+                'updated_at' => $past,
+            ],
+        ];
+
+        $database = Mockery::mock(Db::class);
+        $database->shouldReceive('table')->with('account_withdraw')->andReturnSelf();
+        $database->shouldReceive('where')->with('done', false)->andReturnSelf();
+        $database->shouldReceive('where')->with('scheduled', true)->andReturnSelf();
+        $database->shouldReceive('whereNotNull')->with('scheduled_for')->andReturnSelf();
+        $database->shouldReceive('where')->with('scheduled_for', '<', Mockery::type('string'))->andReturnSelf();
+        $database->shouldReceive('get')->andReturn($rows);
+
+        $pixRow = (object) [
+            'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+            'account_withdraw_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
+            'type' => 'email',
+            'key' => 'user@example.com',
+            'created_at' => $past,
+            'updated_at' => $past,
+        ];
+        $database->shouldReceive('table')->with('account_withdraw_pix')->andReturnSelf();
+        $database->shouldReceive('where')->with('account_withdraw_id', 'c1d2e3f4-5678-1234-9abc-def012345678')->andReturnSelf();
+        $database->shouldReceive('first')->andReturn($pixRow);
+
+        $accountRepository = Mockery::mock(DbAccountRepository::class);
+
+        $pixRepository = Mockery::mock(WithdrawalMethodRepository::class);
+        $pixRepository->shouldReceive('findByWithdrawalId')->andReturnUsing(function($withdrawalId) use ($pixRow) {
+            return PixMapper::mapPix($pixRow);
+        });
+
+        $factory = Mockery::mock(WithdrawalMethodRepositoryFactory::class);
+        $factory->shouldReceive('make')->andReturn($pixRepository);
+
+        $repo = new DbWithdrawalRepository($database, $accountRepository, $factory);
+        $result = $repo->findPending();
+
+        $this->assertInstanceOf(WithdrawalCollection::class, $result);
+        $this->assertCount(1, $result->all());
+        $withdrawal = $result->all()[0];
+        $this->assertInstanceOf(Withdrawal::class, $withdrawal);
+        $this->assertEquals('c1d2e3f4-5678-1234-9abc-def012345678', $withdrawal->id->value);
+        $this->assertEquals('c1d2e3f4-5678-1234-9abc-def012345678', $withdrawal->accountId->value);
+        $this->assertEquals(100.0, $withdrawal->amount);
+        $this->assertFalse($withdrawal->done());
+        $this->assertInstanceOf(Pix::class, $withdrawal->method);
+        /** @var Pix $method */
+        $method = $withdrawal->method;
+        $this->assertEquals('user@example.com', $method->key->value);
+    }
+}
