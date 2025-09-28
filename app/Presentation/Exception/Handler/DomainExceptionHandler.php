@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Presentation\Exception\Handler;
+
+use App\Presentation\Exception\Enum\ErrorCodeEnum;
+use App\Presentation\Resource\ErrorResource;
+use DomainException;
+use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\ExceptionHandler\ExceptionHandler;
+use Hyperf\HttpMessage\Stream\SwooleStream;
+use Psr\Http\Message\ResponseInterface;
+use Swoole\Http\Status;
+use Throwable;
+
+class DomainExceptionHandler extends ExceptionHandler
+{
+    public function __construct(
+        private StdoutLoggerInterface $logger,
+    ) {
+    }
+
+    public function handle(Throwable $throwable, ResponseInterface $response)
+    {
+        $this->stopPropagation();
+        $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
+        $this->logger->error($throwable->getTraceAsString());
+
+        $resource = new ErrorResource(
+            errorCode: ErrorCodeEnum::DOMAIN,
+            message: $throwable->getMessage(),
+        );
+
+        return $response
+            ->withStatus(Status::BAD_REQUEST)
+            ->withBody(new SwooleStream(json_encode($resource->toArray())));
+    }
+
+    public function isValid(Throwable $throwable): bool
+    {
+        return $throwable instanceof DomainException;
+    }
+}

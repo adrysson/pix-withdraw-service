@@ -10,12 +10,15 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Exception\Handler;
+namespace App\Presentation\Exception\Handler;
 
+use App\Presentation\Exception\Enum\ErrorCodeEnum;
+use App\Presentation\Resource\ErrorResource;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
+use Swoole\Http\Status;
 use Throwable;
 
 class AppExceptionHandler extends ExceptionHandler
@@ -28,7 +31,16 @@ class AppExceptionHandler extends ExceptionHandler
     {
         $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
         $this->logger->error($throwable->getTraceAsString());
-        return $response->withHeader('Server', 'Hyperf')->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
+
+        $resource = new ErrorResource(
+            errorCode: ErrorCodeEnum::INTERNAL,
+            message: 'Internal Server Error.',
+        );
+
+        return $response
+            ->withHeader('Server', 'Hyperf')
+            ->withStatus(Status::INTERNAL_SERVER_ERROR)
+            ->withBody(new SwooleStream(json_encode($resource->toArray())));
     }
 
     public function isValid(Throwable $throwable): bool

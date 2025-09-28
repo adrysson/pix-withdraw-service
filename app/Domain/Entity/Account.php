@@ -30,18 +30,11 @@ class Account extends Entity
 
     public function withdraw(Withdrawal $withdrawal): void
     {
-        if (! $withdrawal->schedule?->isFuture()) {
-            $this->subtractBalance($withdrawal->amount);
-        }
-    }
-
-    public function subtractBalance(float $amount): void
-    {
-        if ($amount > $this->balance) {
+        if ($withdrawal->amount > $this->balance) {
             throw new InsufficientBalanceException();
         }
 
-        $this->balance -= $amount;
+        $this->balance -= $withdrawal->amount;
 
         $this->update();
     }

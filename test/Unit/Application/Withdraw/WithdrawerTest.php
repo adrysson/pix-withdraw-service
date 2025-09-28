@@ -3,10 +3,11 @@
 namespace Test\Unit\Application\Withdraw;
 
 use App\Application\Withdraw\Withdrawer;
-use App\Domain\EventDispatcher;
 use App\Domain\Repository\WithdrawalRepository;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Mockery;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Test\Stubs\Domain\Entity\WithdrawalStub;
 
 class WithdrawerTest extends TestCase
@@ -27,7 +28,7 @@ class WithdrawerTest extends TestCase
             ->once()
             ->with($withdrawal);
 
-        $eventDispatcher = Mockery::mock(EventDispatcher::class);
+        $eventDispatcher = Mockery::mock(EventDispatcherInterface::class);
         $eventDispatcher->shouldReceive('dispatch');
 
         $withdrawer = new Withdrawer($repository, $eventDispatcher);
@@ -40,7 +41,7 @@ class WithdrawerTest extends TestCase
         $withdrawal = WithdrawalStub::random(
             amount: 60.0,
         );
-        $exception = new \Exception('fail');
+        $exception = new Exception('fail');
         $repository = Mockery::mock(WithdrawalRepository::class);
         $repository->shouldReceive('withdraw')
             ->andThrow($exception);
@@ -48,11 +49,12 @@ class WithdrawerTest extends TestCase
             ->once()
             ->with($withdrawal, $exception);
 
-        $eventDispatcher = Mockery::mock(\App\Domain\EventDispatcher::class);
+        $eventDispatcher = Mockery::mock(EventDispatcherInterface::class);
         $eventDispatcher->shouldNotReceive('dispatch');
 
         $withdrawer = new Withdrawer($repository, $eventDispatcher);
+
+        $this->expectException($exception::class);
         $withdrawer->execute($withdrawal);
-        $this->assertTrue(true);
     }
 }

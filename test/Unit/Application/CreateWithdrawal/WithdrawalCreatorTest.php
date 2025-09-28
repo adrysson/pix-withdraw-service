@@ -7,18 +7,12 @@ use App\Application\Withdraw\Withdrawer;
 use App\Domain\Repository\WithdrawalRepository;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Test\Stubs\Domain\Entity\AccountStub;
-use Test\Stubs\Domain\Entity\PixStub;
+use Test\Stubs\Domain\Entity\WithdrawalStub;
 
 class WithdrawalCreatorTest extends TestCase
 {
     public function testWithdrawCallsAccountWithdrawAndRepositoryUpdate(): void
     {
-        $account = AccountStub::random(
-            balance: 100.0,
-        );
-        $method = PixStub::random();
-
         $withdrawalRepository = Mockery::mock(WithdrawalRepository::class);
         $withdrawalRepository->shouldReceive('create');
 
@@ -30,12 +24,9 @@ class WithdrawalCreatorTest extends TestCase
             withdrawer: $withdrawer,
         );
 
-        $service->execute(
-            accountId: $account->id,
-            method: $method,
-            amount: 40.0,
-            schedule: null,
-        );
+        $withdrawal = WithdrawalStub::random();
+
+        $service->execute($withdrawal);
 
         $this->assertTrue(true);
     }

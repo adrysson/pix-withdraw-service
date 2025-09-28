@@ -1,9 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-use Hyperf\Validation\Middleware\ValidationMiddleware;
-
 /**
  * This file is part of Hyperf.
  *
@@ -13,7 +10,7 @@ use Hyperf\Validation\Middleware\ValidationMiddleware;
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    'http' => [
-        ValidationMiddleware::class,
-    ],
+    'locale' => 'pt_BR',
+    'fallback_locale' => 'en',
+    'path' => BASE_PATH . '/storage/languages',
 ];

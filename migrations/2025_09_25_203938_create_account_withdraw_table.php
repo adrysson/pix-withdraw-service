@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('scheduled')->default(false);
             $table->datetime('scheduled_for')->nullable();
             $table->boolean('done')->default(false);
-            $table->boolean('error')->default(false);
+            $table->boolean('error')->nullable();
             $table->string('error_reason')->nullable();
             $table->foreign('account_id')->references('id')->on('account')->onDelete('cascade');
             $table->datetimes();

@@ -104,7 +104,7 @@ class DbWithdrawalRepositoryTest extends TestCase
             (object) [
                 'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
                 'account_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
-                'method' => 'pix',
+                'method' => 'PIX',
                 'amount' => 100.0,
                 'scheduled' => true,
                 'scheduled_for' => $past,
@@ -119,7 +119,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $database->shouldReceive('where')->with('done', false)->andReturnSelf();
         $database->shouldReceive('where')->with('scheduled', true)->andReturnSelf();
         $database->shouldReceive('whereNotNull')->with('scheduled_for')->andReturnSelf();
-        $database->shouldReceive('where')->with('scheduled_for', '<', Mockery::type('string'))->andReturnSelf();
+        $database->shouldReceive('where')->with('scheduled_for', '<=', Mockery::type('string'))->andReturnSelf();
         $database->shouldReceive('get')->andReturn($rows);
 
         $pixRow = (object) [
