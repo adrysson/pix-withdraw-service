@@ -158,7 +158,7 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 		   "method": "PIX",
 		   "pix": {
 			   "type": "email",
-			   "key": "fulano@email.com"
+			   "key": "teste@email.com"
 		   },
 		   "amount": 10,
 		   "schedule": null
