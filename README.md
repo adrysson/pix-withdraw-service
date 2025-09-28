@@ -237,6 +237,16 @@ Se não quiser usar o Makefile, todos os comandos podem ser executados manualmen
 	}'
 	```
 
+## 🧪 Testes
+
+Para rodar os testes unitários do projeto:
+
+```bash
+make tests
+```
+
+> ⚠️ Os testes unitários não cobrem todos os cenários e não foram implementados testes de integração devido ao tempo limitado. Considero a cobertura de testes (unitários e integração) fundamental para a qualidade e evolução do sistema, e recomendo fortemente sua implementação em etapas futuras.
+
 ---
 
 ## 📫 Testes via Postman
