@@ -21,12 +21,14 @@
         "hyperf/engine": "^2.10",
         "hyperf/framework": "~3.1.0",
         "hyperf/guzzle": "~3.1.0",
+        "hyperf/http-message": "^3.1",
         "hyperf/http-server": "~3.1.0",
         "hyperf/logger": "~3.1.0",
         "hyperf/memory": "~3.1.0",
         "hyperf/process": "~3.1.0",
         "hyperf/redis": "~3.1.0",
         "hyperf/tracer": "~3.1.0",
+        "hyperf/validation": "^3.1",
         "ramsey/uuid": "^4.9"
     },
     "require-dev": {
