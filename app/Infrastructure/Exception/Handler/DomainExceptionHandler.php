@@ -28,13 +28,12 @@ class DomainExceptionHandler extends ExceptionHandler
 
         $resource = new ErrorResource(
             errorCode: ErrorCodeEnum::DOMAIN,
-            throwable: $throwable,
+            message: $throwable->getMessage(),
         );
+
         return $response
             ->withStatus(Status::BAD_REQUEST)
-            ->withBody(new SwooleStream(json_encode([
-                'error' => $resource->toArray()
-            ])));
+            ->withBody(new SwooleStream(json_encode($resource->toArray())));
     }
 
     public function isValid(Throwable $throwable): bool

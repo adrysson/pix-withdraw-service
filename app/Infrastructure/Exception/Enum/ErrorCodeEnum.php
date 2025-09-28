@@ -6,5 +6,6 @@ namespace App\Infrastructure\Exception\Enum;
 
 enum ErrorCodeEnum: string
 {
+    case INTERNAL = 'INTERNAL_ERROR';
     case DOMAIN = 'DOMAIN_ERROR';
 }
