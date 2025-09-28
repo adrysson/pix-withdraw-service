@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presentation\Request;
 
 use App\Domain\Enum\WithdrawalMethodType;
+use App\Domain\Enum\PixKeyType;
 use DateTime;
 use Hyperf\Validation\Request\FormRequest;
 
@@ -36,6 +37,7 @@ class AccountWithdrawRequest extends FormRequest
             'pix.type' => [
                 'required_if:method,' . WithdrawalMethodType::PIX->value,
                 'string',
+                'in:' . implode(',', array_map(fn($e) => $e->value, PixKeyType::cases())),
             ],
             'pix.key' => [
                 'required_if:method,' . WithdrawalMethodType::PIX->value,
