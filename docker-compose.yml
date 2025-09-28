@@ -34,9 +34,19 @@ services:
       - "1025:1025"   # Porta SMTP
       - "8025:8025"   # Interface web do MailHog
 
+  redis:
+    image: redis:7.2
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 networks:
   default:
     name: hyperf-skeleton
 
 volumes:
   db_data:
+  redis_data:

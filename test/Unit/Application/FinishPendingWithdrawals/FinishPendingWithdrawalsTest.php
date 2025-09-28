@@ -6,6 +6,7 @@ use App\Application\FinishPendingWithdrawals\FinishPendingWithdrawals;
 use App\Application\Withdraw\Withdrawer;
 use App\Domain\Collection\WithdrawalCollection;
 use App\Domain\Repository\WithdrawalRepository;
+use App\Domain\Service\AsyncWithdrawDispatcher;
 use PHPUnit\Framework\TestCase;
 use Test\Stubs\Domain\Entity\WithdrawalStub;
 
@@ -27,9 +28,9 @@ class FinishPendingWithdrawalsTest extends TestCase
             ->willReturn($collection);
 
 
-        $withdrawer = $this->createMock(Withdrawer::class);
+        $withdrawer = $this->createMock(AsyncWithdrawDispatcher::class);
         $withdrawer->expects($this->exactly(2))
-            ->method('execute');
+            ->method('dispatch');
 
         $service = new FinishPendingWithdrawals($withdrawalRepository, $withdrawer);
         $service->execute();

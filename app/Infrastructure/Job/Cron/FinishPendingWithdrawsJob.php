@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Process;
+namespace App\Infrastructure\Job\Cron;
 
 use App\Application\FinishPendingWithdrawals\FinishPendingWithdrawals;
-use Hyperf\Process\AbstractProcess;
-use Hyperf\Process\Annotation\Process;
+use Hyperf\AsyncQueue\Job;
 
-#[Process(name: 'ProcessWithdrawJob')]
-class ProcessWithdrawJob extends AbstractProcess
+class FinishPendingWithdrawsJob extends Job
 {
     public function __construct(
         private FinishPendingWithdrawals $finishPendingWithdrawals,

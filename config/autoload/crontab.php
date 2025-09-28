@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Process\ProcessWithdrawJob;
+use App\Infrastructure\Job\Cron\FinishPendingWithdrawsJob;
+use Hyperf\Crontab\Crontab;
 
 return [
-    [
-        'name' => 'ProcessScheduledWithdraws',
-        'rule' => '* * * * *',
-        'callback' => [ProcessWithdrawJob::class, 'handle'],
+    'enable' => true,
+    'crontab' => [
+        (new Crontab())->setName('Foo')->setRule('* * * * *')->setCallback([FinishPendingWithdrawsJob::class, 'handle']),
     ],
 ];
