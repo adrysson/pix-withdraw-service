@@ -19,6 +19,8 @@ class WithdrawalCreator
     ): void {
         $this->withdrawalRepository->create($withdrawal);
 
-        $this->withdrawer->execute($withdrawal);
+        if (! $withdrawal->schedule) {
+            $this->withdrawer->execute($withdrawal);
+        }
     }
 }

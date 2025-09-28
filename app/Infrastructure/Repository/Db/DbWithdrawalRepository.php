@@ -109,7 +109,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
             ->where('done', false)
             ->where('scheduled', true)
             ->whereNotNull('scheduled_for')
-            ->where('scheduled_for', '<', $now)
+            ->where('scheduled_for', '<=', $now)
             ->get();
 
         $collection = new WithdrawalCollection();
