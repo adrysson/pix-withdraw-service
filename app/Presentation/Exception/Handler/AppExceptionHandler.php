@@ -14,7 +14,6 @@ namespace App\Presentation\Exception\Handler;
 
 use App\Presentation\Exception\Enum\ErrorCodeEnum;
 use App\Presentation\Resource\ErrorResource;
-use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
@@ -23,15 +22,8 @@ use Throwable;
 
 class AppExceptionHandler extends ExceptionHandler
 {
-    public function __construct(protected StdoutLoggerInterface $logger)
-    {
-    }
-
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
-        $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
-        $this->logger->error($throwable->getTraceAsString());
-
         $resource = new ErrorResource(
             errorCode: ErrorCodeEnum::INTERNAL,
             message: 'Internal Server Error.',
