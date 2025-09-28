@@ -2,7 +2,7 @@
 
 namespace App\Domain;
 
-use InvalidArgumentException;
+use App\Domain\Exception\InvalidValueObjectException;
 
 abstract class ValueObject
 {
@@ -10,7 +10,7 @@ abstract class ValueObject
     public function __construct()
     {
         if (! $this->isValid()) {
-            throw new InvalidArgumentException($this->errorMessage());
+            throw new InvalidValueObjectException($this);
         }
     }
 
@@ -21,7 +21,7 @@ abstract class ValueObject
         return true;
     }
 
-    protected function errorMessage(): string
+    public function errorMessage(): string
     {
         return 'Invalid value';
     }

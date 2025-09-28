@@ -16,7 +16,7 @@ class EmailPixKey extends PixKey
         return filter_var($this->value, FILTER_VALIDATE_EMAIL) !== false;
     }
 
-    protected function errorMessage(): string
+    public function errorMessage(): string
     {
         return 'O valor da chave pix deve ser um e-mail válido';
     }
