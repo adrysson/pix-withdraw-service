@@ -117,6 +117,7 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 ---
 
 ## 🚀 Como rodar
+---
 
 1. **Clonar repositório:**
 	 ```bash
@@ -129,14 +130,9 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 	 docker-compose up -d
 	 ```
 
-3. **Criar tabelas no MySQL (rodar migrations):**
+3. **Criar tabelas no MySQL e popular o banco com dados de exemplo:**
 	```bash
-	docker compose exec app php bin/hyperf.php migrate
-	```
-
-4. **Popular o banco com dados de exemplo (rodar seeds):**
-	```bash
-	docker compose exec app php bin/hyperf.php db:seed
+	docker compose exec app php bin/hyperf.php migrate --seed
 	```
 
 	> ⚠️ Uma conta de teste é criada automaticamente pela seed:
@@ -145,7 +141,7 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 	>
 	> Use este ID para testar os endpoints de saque.
 
-5. **Acessar serviço:**
+4. **Acessar serviço:**
 
 	   - API: http://localhost:9501
 	   - Mailhog: http://localhost:8025
@@ -164,6 +160,12 @@ Esse design facilita a extensão para novos métodos de saque no futuro (TED, bo
 		   "schedule": null
 	   }'
 	   ```
+
+---
+
+## 📫 Testes via Postman
+
+Na raiz do projeto há uma collection do Postman com exemplos de requisições e fluxos do serviço. Basta importar a collection no Postman para testar os principais endpoints e cenários do sistema.
 
 ---
 

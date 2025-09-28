@@ -1,0 +1,212 @@
+{
+	"info": {
+		"_postman_id": "22a8915a-4e8d-48bf-bf98-89bc9752530b",
+		"name": "Saque",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5024850"
+	},
+	"item": [
+		{
+			"name": "Saque",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"PIX\",\n    \"pix\": {\n        \"type\": \"email\",\n        \"key\": \"teste@email.com\"\n    },\n    \"amount\": 10,\n    \"schedule\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9501",
+					"path": [
+						"account",
+						"f0e570b1-a3bb-499a-bcdf-2df0b66a37d2",
+						"balance",
+						"withdraw"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Saque imediato",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"PIX\",\n    \"pix\": {\n        \"type\": \"email\",\n        \"key\": \"teste@email.com\"\n    },\n    \"amount\": 10,\n    \"schedule\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9501",
+							"path": [
+								"account",
+								"f0e570b1-a3bb-499a-bcdf-2df0b66a37d2",
+								"balance",
+								"withdraw"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Saque agendado",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"PIX\",\n    \"pix\": {\n        \"type\": \"email\",\n        \"key\": \"teste@email.com\"\n    },\n    \"amount\": 10,\n    \"schedule\": \"2025-09-28 18:10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9501",
+							"path": [
+								"account",
+								"f0e570b1-a3bb-499a-bcdf-2df0b66a37d2",
+								"balance",
+								"withdraw"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Tentativa de saque com saldo insuficiente",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"PIX\",\n    \"pix\": {\n        \"type\": \"email\",\n        \"key\": \"teste@email.com\"\n    },\n    \"amount\": 10,\n    \"schedule\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9501",
+							"path": [
+								"account",
+								"f0e570b1-a3bb-499a-bcdf-2df0b66a37d2",
+								"balance",
+								"withdraw"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Tentativa de saque com agendamento no passado",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"PIX\",\n    \"pix\": {\n        \"type\": \"email\",\n        \"key\": \"teste@email.com\"\n    },\n    \"amount\": 10,\n    \"schedule\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9501",
+							"path": [
+								"account",
+								"f0e570b1-a3bb-499a-bcdf-2df0b66a37d2",
+								"balance",
+								"withdraw"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Tentativa de saque com agendamento além de 7 dias",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"PIX\",\n    \"pix\": {\n        \"type\": \"email\",\n        \"key\": \"teste@email.com\"\n    },\n    \"amount\": 10,\n    \"schedule\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9501/account/f0e570b1-a3bb-499a-bcdf-2df0b66a37d2/balance/withdraw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9501",
+							"path": [
+								"account",
+								"f0e570b1-a3bb-499a-bcdf-2df0b66a37d2",
+								"balance",
+								"withdraw"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		}
+	]
+}
