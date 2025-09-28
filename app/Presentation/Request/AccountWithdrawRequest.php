@@ -61,7 +61,7 @@ class AccountWithdrawRequest extends FormRequest
         return $this->input('method');
     }
 
-    public function method(): array
+    public function methodData(): array
     {
         return $this->input(strtolower($this->methodType()));
     }

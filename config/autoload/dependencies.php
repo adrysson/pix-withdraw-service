@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Domain\EventDispatcher;
-use Hyperf\Event\EventDispatcher as HyperfEventDispatcher;
+use App\Domain\Repository\WithdrawalRepository;
+use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
+use Hyperf\Event\EventDispatcher;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * This file is part of Hyperf.
@@ -14,5 +16,6 @@ use Hyperf\Event\EventDispatcher as HyperfEventDispatcher;
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    EventDispatcher::class => HyperfEventDispatcher::class
+    EventDispatcherInterface::class => EventDispatcher::class,
+    WithdrawalRepository::class => DbWithdrawalRepository::class,
 ];

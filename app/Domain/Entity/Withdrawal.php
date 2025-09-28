@@ -54,7 +54,7 @@ class Withdrawal extends Entity
         $schedule?->validateForCreation();
 
         return new self(
-            id: WithdrawalId::generate(),
+            id: $method->withdrawalId,
             accountId: $accountId,
             method: $method,
             amount: $amount,

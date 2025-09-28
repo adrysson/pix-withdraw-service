@@ -17,7 +17,7 @@ class AccountSeeder extends Seeder
     {
         Db::table('account')->insert([
             [
-                'id' => Uuid::uuid4()->toString(),
+                'id' => 'f0e570b1-a3bb-499a-bcdf-2df0b66a37d2',
                 'name' => 'John Doe',
                 'balance' => 1000.00,
                 'created_at' => date('Y-m-d H:i:s'),

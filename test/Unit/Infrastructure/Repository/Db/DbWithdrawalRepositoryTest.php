@@ -104,7 +104,7 @@ class DbWithdrawalRepositoryTest extends TestCase
             (object) [
                 'id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
                 'account_id' => 'c1d2e3f4-5678-1234-9abc-def012345678',
-                'method' => 'pix',
+                'method' => 'PIX',
                 'amount' => 100.0,
                 'scheduled' => true,
                 'scheduled_for' => $past,
