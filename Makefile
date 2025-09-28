@@ -11,4 +11,4 @@ up:
 	$(DOCKER_COMPOSE) up -d
 
 migrate-seed:
-	$(DOCKER_COMPOSE) exec app php bin/hyperf.php migrate --seed
+	$(DOCKER_COMPOSE) exec app php bin/hyperf.php migrate:fresh --seed
