@@ -1,27 +1,22 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 
 namespace App\Infrastructure\Listener;
 
 use App\Domain\Entity\Pix;
 use App\Domain\Event\WithdrawalPerformed;
+use App\Domain\Service\EmailSender;
 use App\Domain\ValueObject\Pix\EmailPixKey;
 use Hyperf\Event\Contract\ListenerInterface;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
-use Symfony\Component\Mime\Email;
 
 class SendEmailListener implements ListenerInterface
 {
+    public function __construct(
+        private EmailSender $emailSender,
+    ) {
+    }
+
     public function listen(): array
     {
         return [
@@ -43,9 +38,6 @@ class SendEmailListener implements ListenerInterface
             return;
         }
 
-        $transport = new EsmtpTransport('mailhog', 1025);
-        $mailer = new Mailer($transport);
-
         $amount = $event->withdrawal->amount;
         $date = $event->withdrawal->updatedAt()->format('d/m/Y H:i');
         $keyType = $event->withdrawal->method->key->keyType()->value;
@@ -57,12 +49,10 @@ class SendEmailListener implements ListenerInterface
             . "<p><b>Tipo da chave pix: $keyType</b></p>"
             . "<p><b>Chave pix:</b> $key</p>";
 
-        $email = (new Email())
-            ->from('no-reply@meusistema.local')
-            ->to($event->withdrawal->method->key->value)
-            ->subject('Saque realizado com sucesso')
-            ->html($body);
-
-        $mailer->send($email);
+        $this->emailSender->send(
+            to: $event->withdrawal->method->key->value,
+            subject: 'Saque realizado com sucesso',
+            body: $body,
+        );
     }
 }

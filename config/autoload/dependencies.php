@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Domain\Repository\WithdrawalRepository;
+use App\Domain\Service\EmailSender;
 use App\Infrastructure\Repository\Db\DbWithdrawalRepository;
+use App\Infrastructure\Service\MailerEmailSender;
 use Hyperf\Event\EventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -18,4 +20,5 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 return [
     EventDispatcherInterface::class => EventDispatcher::class,
     WithdrawalRepository::class => DbWithdrawalRepository::class,
+    EmailSender::class => MailerEmailSender::class,
 ];
