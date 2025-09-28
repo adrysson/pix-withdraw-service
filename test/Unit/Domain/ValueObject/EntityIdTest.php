@@ -2,8 +2,8 @@
 
 namespace Test\Unit\Domain\ValueObject;
 
+use App\Domain\Exception\InvalidValueObjectException;
 use App\Domain\ValueObject\EntityId;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class EntityIdTest extends TestCase
@@ -21,7 +21,7 @@ class EntityIdTest extends TestCase
 
     public function testThrowExceptionForInvalidUuid(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidValueObjectException::class);
         $obj = new EntityId('invalid-uuid');
     }
 }
