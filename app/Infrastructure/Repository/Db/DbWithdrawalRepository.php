@@ -51,10 +51,7 @@ class DbWithdrawalRepository implements WithdrawalRepository
                 methodType: $withdrawal->method->methodType(),
             );
 
-            $methodRepository->insert(
-                database: $this->database,
-                method: $withdrawal->method,
-            );
+            $methodRepository->insert($withdrawal->method);
 
             $this->database->commit();
         } catch (Throwable $throwable) {
@@ -137,9 +134,6 @@ class DbWithdrawalRepository implements WithdrawalRepository
 
         $withdrawalId = new WithdrawalId($row->id);
 
-        return $methodRepository->findByWithdrawalId(
-            database: $this->database,
-            withdrawalId: $withdrawalId,
-        );
+        return $methodRepository->findByWithdrawalId($withdrawalId);
     }
 }

@@ -137,7 +137,7 @@ class DbWithdrawalRepositoryTest extends TestCase
         $accountRepository = Mockery::mock(DbAccountRepository::class);
 
         $pixRepository = Mockery::mock(WithdrawalMethodRepository::class);
-        $pixRepository->shouldReceive('findByWithdrawalId')->andReturnUsing(function($database, $withdrawalId) use ($pixRow) {
+        $pixRepository->shouldReceive('findByWithdrawalId')->andReturnUsing(function($withdrawalId) use ($pixRow) {
             return PixMapper::mapPix($pixRow);
         });
 

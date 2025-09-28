@@ -18,7 +18,7 @@ class DbPixRepository implements WithdrawalMethodRepository
     ) {
     }
 
-    public function findByWithdrawalId(Db $database, WithdrawalId $withdrawalId): ?Pix
+    public function findByWithdrawalId(WithdrawalId $withdrawalId): ?Pix
     {
         $row = $this->database->table(self::PIX_TABLE)
             ->where('account_withdraw_id', $withdrawalId->value)
@@ -30,7 +30,7 @@ class DbPixRepository implements WithdrawalMethodRepository
     }
 
     /** @param Pix $pix */
-    public function insert(Db $database, WithdrawalMethod $pix): void
+    public function insert(WithdrawalMethod $pix): void
     {
         $this->database->table(self::PIX_TABLE)
             ->insert([
