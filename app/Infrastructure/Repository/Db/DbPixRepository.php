@@ -13,6 +13,11 @@ class DbPixRepository implements WithdrawalMethodRepository
 {
     private const PIX_TABLE = 'account_withdraw_pix';
 
+    public function __construct(
+        private Db $database,
+    ) {
+    }
+
     public function findByWithdrawalId(Db $database, WithdrawalId $withdrawalId): ?Pix
     {
         $row = $database->table(self::PIX_TABLE)

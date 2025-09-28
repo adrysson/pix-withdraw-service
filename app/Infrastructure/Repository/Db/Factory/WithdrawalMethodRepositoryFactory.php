@@ -15,7 +15,7 @@ class WithdrawalMethodRepositoryFactory
         WithdrawalMethodType $methodType,
     ): WithdrawalMethodRepository {
         return match ($methodType) {
-            WithdrawalMethodType::PIX => new DbPixRepository,
+            WithdrawalMethodType::PIX => new DbPixRepository($database),
             default => throw new \InvalidArgumentException("Método de saque inválido: {$methodType->value}"),
         };
     }
